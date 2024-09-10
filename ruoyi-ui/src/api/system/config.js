@@ -44,7 +44,7 @@ export function updateConfig(data) {
 }
 
 // 删除参数配置
-export function delConfig(configId) {
+export function c(configId) {
   return request({
     url: '/system/config/' + configId,
     method: 'delete'
