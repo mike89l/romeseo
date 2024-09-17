@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ArticleMapper {
 
-    List<Article> selectArticleList();
+    List<Article> selectArticleList(Article article);
 
     List<Article> selectArticle(Article article);
 

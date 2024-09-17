@@ -8,7 +8,7 @@ public interface ArticleService {
 
 
 //    文章列表
-    public List<Article> selectArticleList();
+    public List<Article> selectArticleList(Article article);
 
 
 //    查询文章

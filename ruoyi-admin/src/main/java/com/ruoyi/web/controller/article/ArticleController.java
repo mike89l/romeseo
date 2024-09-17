@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/article/add")
+@RequestMapping("/article/manage")
 public class ArticleController extends BaseController {
 
 
@@ -24,7 +24,7 @@ public class ArticleController extends BaseController {
     private ArticleService articleService;
 
 
-    @PreAuthorize("@ss.hasPermi('article:add:index')")
+    @PreAuthorize("@ss.hasPermi('article:manage:add')")
     @Log(title = "文章新增", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult list(@Validated @RequestBody Article article)
@@ -37,12 +37,12 @@ public class ArticleController extends BaseController {
     }
 
 
-    @PreAuthorize("@ss.hasPermi('article:check:index')")
+    @PreAuthorize("@ss.hasPermi('article:manage:list')")
     @Log(title = "文章列表", businessType = BusinessType.OTHER)
     @GetMapping("/list")
-    public TableDataInfo getarticleList(){
+    public TableDataInfo getarticleList(Article article){
         startPage();
-        List<Article> rs = articleService.selectArticleList();
+        List<Article> rs = articleService.selectArticleList(article);
         return getDataTable(rs);
     }
 

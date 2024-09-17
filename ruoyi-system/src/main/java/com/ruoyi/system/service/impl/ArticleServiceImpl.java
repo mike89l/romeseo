@@ -18,8 +18,8 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public List<Article> selectArticleList() {
-        return articleMapper.selectArticleList();
+    public List<Article> selectArticleList(Article article) {
+        return articleMapper.selectArticleList(article);
     }
 
     @Override
