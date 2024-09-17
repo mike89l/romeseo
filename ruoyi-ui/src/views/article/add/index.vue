@@ -13,7 +13,7 @@
         <el-input type="textarea" v-model="article.artContent"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm(article)">立即创建</el-button>
+        <el-button type="primary" @click="submitForm('article')">立即创建</el-button>
         <el-button @click="resetForm('article')">重置</el-button>
       </el-form-item>
     </el-form>
@@ -26,6 +26,7 @@
 
 <script>
 import {addArticle} from "@/api/system/article";
+import {addUser} from "@/api/system/user";
 
 export default {
   data() {
@@ -51,21 +52,21 @@ export default {
   },
   methods: {
     submitForm(article) {
-      addArticle(article)
-
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     console.log('formName',formName)
-      //     addArticle(formName)
-      //     alert('submit!');
-      //   } else {
-      //     console.log('error submit!!');
-      //     return false;
-      //   }
-      // });
+      this.$refs[article].validate((valid) => {
+        if (valid) {
+          addArticle(this.article).then(response => {
+            this.$modal.msgSuccess("新增成功");
+            this.open = false;
+            this.getList();
+          });
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm(article) {
+      this.$refs[article].resetFields();
     }
   }
 }
