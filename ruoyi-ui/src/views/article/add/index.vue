@@ -4,13 +4,13 @@
 
     <el-form :model="article" :rules="rules" ref="article" label-width="100px" class="demo-article">
       <el-form-item label="文章标题" prop="title">
-        <el-input v-model="article.title"></el-input>
+        <el-input v-model="article.artTitle"></el-input>
       </el-form-item>
       <el-form-item label="文章描述" prop="description">
-        <el-input v-model="article.description"></el-input>
+        <el-input v-model="article.artDescription"></el-input>
       </el-form-item>
       <el-form-item label="文章内容" prop="content">
-        <el-input type="textarea" v-model="article.content"></el-input>
+        <el-input type="textarea" v-model="article.artContent"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm(article)">立即创建</el-button>
@@ -25,38 +25,38 @@
 </template>
 
 <script>
-
+import {addArticle} from "@/api/system/article";
 
 export default {
   data() {
     return {
       article: {
-        title: '',
-        description: '',
-        content: ''
+        artTitle: '',
+        artDescription: '',
+        artContent: ''
       },
       rules: {
-        title: [
+        artTitle: [
           { required: true, message: '请输入文章标题', trigger: 'blur' },
           { min: 3, max: 100, message: '长度在 3 到 100 个字符', trigger: 'blur' }
         ],
-        description: [
+        artDescription: [
           { required: true, message: '请输入文章描述', trigger: 'change' }
         ],
-        content: [
+        artContent: [
           { required: true, message: '请输入文章描述', trigger: 'change' }
         ],
       }
     };
   },
   methods: {
-    submitForm(formName) {
-      console.log('formName',formName)
-
+    submitForm(article) {
+      addArticle(article)
 
       // this.$refs[formName].validate((valid) => {
       //   if (valid) {
       //     console.log('formName',formName)
+      //     addArticle(formName)
       //     alert('submit!');
       //   } else {
       //     console.log('error submit!!');
