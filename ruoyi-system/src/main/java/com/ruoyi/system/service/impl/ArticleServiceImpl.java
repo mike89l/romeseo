@@ -7,6 +7,7 @@ import com.ruoyi.system.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -17,8 +18,13 @@ public class ArticleServiceImpl implements ArticleService {
 
 
     @Override
-    public List<Article> selectArticleList(Article article) {
-        List<Article> articles = articleMapper.selectArticleList(article);
+    public List<Article> selectArticleList() {
+        return articleMapper.selectArticleList();
+    }
+
+    @Override
+    public List<Article> selectArticle(Article article) {
+        List<Article> articles = articleMapper.selectArticle(article);
         return articles;
     }
 

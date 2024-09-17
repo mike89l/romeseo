@@ -16,11 +16,14 @@
     </resultMap>
 
 
-    <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
+    <select id="selectArticleList" resultMap="ArticleResult">
+        select art_id,art_title,art_description,art_content,status,create_time,update_time from article
+    </select>
+
+    <select id="selectArticle" parameterType="Article" resultMap="ArticleResult">
         select art_id,art_title,art_description,art_content,status,create_time,update_time from article
         where art_title=#{artTitle}
     </select>
-
 
 
 

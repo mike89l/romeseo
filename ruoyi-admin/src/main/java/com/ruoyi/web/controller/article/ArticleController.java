@@ -5,6 +5,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Article;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +25,26 @@ public class ArticleController extends BaseController {
 
 
     @PreAuthorize("@ss.hasPermi('article:add:index')")
-    @Log(title = "文章管理", businessType = BusinessType.INSERT)
+    @Log(title = "文章新增", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult list(@Validated @RequestBody Article article)
     {
-        List<Article> articles = articleService.selectArticleList(article);
+        List<Article> articles = articleService.selectArticle(article);
         if (articles!=null && articles.size()>0) {
             return error("新增失败，该文章已存在");
         }
         return toAjax(articleService.insertArticle(article));
     }
 
+
+    @PreAuthorize("@ss.hasPermi('article:check:index')")
+    @Log(title = "文章列表", businessType = BusinessType.OTHER)
+    @GetMapping("/list")
+    public TableDataInfo getarticleList(){
+        startPage();
+        List<Article> rs = articleService.selectArticleList();
+        return getDataTable(rs);
+    }
 
 
 
