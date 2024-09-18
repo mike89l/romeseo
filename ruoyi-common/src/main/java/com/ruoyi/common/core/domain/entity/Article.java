@@ -26,7 +26,7 @@ public class Article extends BaseEntity {
     private String artContent;
 
     /** 文章状态 */
-    @Excel(name = "文章内容")
+    @Excel(name = "文章状态")
     private int status;
 
     public Long getArticleId() {

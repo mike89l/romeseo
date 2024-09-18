@@ -26,7 +26,7 @@ public class ArticleController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('article:manage:add')")
     @Log(title = "文章新增", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
     public AjaxResult list(@Validated @RequestBody Article article)
     {
         List<Article> articles = articleService.selectArticle(article);

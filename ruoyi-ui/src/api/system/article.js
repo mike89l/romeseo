@@ -6,7 +6,8 @@ import request from "@/utils/request";
 export function getarticleList(query) {
   return request({
     url: '/article/manage/list',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 
@@ -14,7 +15,7 @@ export function getarticleList(query) {
 //新增文章
 export function addArticle(data) {
   return request({
-    url: '/article/add',
+    url: '/article/manage/add',
     method: 'post',
     data: data
   })
