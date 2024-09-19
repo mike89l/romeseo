@@ -11,17 +11,24 @@
         <result property="artDescription"     column="art_description"    />
         <result property="artContent"     column="art_content"    />
         <result property="status"     column="status"    />
+        <result property="delFlag"     column="del_flag"    />
         <result property="createTime"     column="create_time"    />
         <result property="updateTime"     column="update_time"    />
     </resultMap>
 
 
     <select id="selectArticleList" resultMap="ArticleResult">
-        select art_id,art_title,art_description,art_content,status,create_time,update_time from article
+        select art_id,art_title,art_description,art_content,status,del_flag,create_time,update_time from article
+        where del_flag = '0'
+    </select>
+
+    <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
+        select art_id,art_title,art_description,art_content,status,del_flag,create_time,update_time from article
+        where art_id=#{articleId}
     </select>
 
     <select id="selectArticle" parameterType="Article" resultMap="ArticleResult">
-        select art_id,art_title,art_description,art_content,status,create_time,update_time from article
+        select art_id,art_title,art_description,art_content,status,del_flag,create_time,update_time from article
         where art_title=#{artTitle}
     </select>
 
@@ -34,6 +41,7 @@
         <if test="artDescription != null and artDescription != '' ">art_description,</if>
         <if test="artContent != null and artContent != '' ">art_content,</if>
         <if test="status != null and status != '' ">status,</if>
+        <if test="delFlag != null and delFlag != '' ">del_flag,</if>
         <if test="createTime != null">create_time,</if>
         <if test="updateTime != null">update_time</if>
         )values(
@@ -42,10 +50,23 @@
         <if test="artDescription != null and artDescription != ''">#{artDescription},</if>
         <if test="artContent != null and artContent != ''">#{artContent},</if>
         <if test="status != null and status != ''">#{status},</if>
+        <if test="delFlag != null and delFlag != ''">#{delFlag},</if>
         <if test="createTime != null">#{createTime},</if>
         <if test="updateTime != null">#{updateTime}</if>
         )
     </insert>
+
+    <delete id="deleteArticleById" parameterType="Long">
+        update article set del_flag = '1' where art_id = #{articleId}
+    </delete>
+
+    <delete id="deleteArticleByIds" parameterType="Long">
+        update article set del_flag = '1' where art_id in
+        <foreach collection="array" item="articleId" open="(" separator="," close=")">
+            #{articleId}
+        </foreach>
+    </delete>
+
 
 
 

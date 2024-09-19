@@ -632,12 +632,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
-        return delUser(userIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      console.log('row',row)
+      // this.$modal.confirm('是否确认删除用户编号为"' + userIds + '"的数据项？').then(function() {
+      //   return delUser(userIds);
+      // }).then(() => {
+      //   this.getList();
+      //   this.$modal.msgSuccess("删除成功");
+      // }).catch(() => {});
     },
     /** 导出按钮操作 */
     handleExport() {

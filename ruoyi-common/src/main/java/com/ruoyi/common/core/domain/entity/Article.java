@@ -26,8 +26,12 @@ public class Article extends BaseEntity {
     private String artContent;
 
     /** 文章状态 */
-    @Excel(name = "文章状态")
-    private int status;
+    @Excel(name = "文章状态", readConverterExp = "0=正常,1=停用")
+    private String status;
+
+    /** 删除标志（0代表存在 1代表删除） */
+    @Excel(name = "删除状态", readConverterExp = "0=存在,1=删除")
+    private String delFlag;
 
     public Long getArticleId() {
         return articleId;
@@ -61,8 +65,20 @@ public class Article extends BaseEntity {
         this.artContent = artContent;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(String delFlag) {
+        this.delFlag = delFlag;
     }
 
     @Override
@@ -73,10 +89,7 @@ public class Article extends BaseEntity {
                 .append("artDescription", artDescription)
                 .append("artContent", artContent)
                 .append("status", status)
+                .append("delFlag", delFlag)
                 .toString();
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
     }
 }

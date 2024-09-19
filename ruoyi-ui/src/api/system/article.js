@@ -1,5 +1,5 @@
 import request from "@/utils/request";
-
+import { parseStrEmpty } from "@/utils/ruoyi";
 
 
 //文章列表
@@ -11,6 +11,13 @@ export function getarticleList(query) {
   })
 }
 
+// 查询文章详细
+export function getarticle(articleId) {
+  return request({
+    url: '/article/manage/' + parseStrEmpty(articleId),
+    method: 'get'
+  })
+}
 
 //新增文章
 export function addArticle(data) {
@@ -21,11 +28,11 @@ export function addArticle(data) {
   })
 }
 
+
 //删除文章
-export function deleteArticle(data) {
+export function deleteArticle(articleId) {
   return request({
-    url: '/article/manage/delete',
-    method: 'post',
-    data: data
+    url: '/article/manage/' + articleId,
+    method: 'delete',
   })
 }

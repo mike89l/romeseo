@@ -10,8 +10,13 @@ public interface ArticleMapper {
 
     List<Article> selectArticle(Article article);
 
+    Article selectArticleById(Long articleId);
+
     public int insertArticle(Article article);
 
+    public int deleteArticleById(Long articleId);
+
+    public int deleteArticleByIds(Long[] articleIds);
 
 
 }

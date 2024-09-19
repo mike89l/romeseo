@@ -8,31 +8,55 @@ import java.util.Date;
 public class PjtConfig extends BaseEntity {
 
     /** 状态参数 */
-    @Excel(name = "关闭")
-    private static int close = 0;
+    @Excel(name = "状态参数-0")
+    private static String zero = String.valueOf(0);
 
     /** 状态参数 */
-    @Excel(name = "开启")
-    private static int open = 1;
+    @Excel(name = "状态参数-1")
+    private static String one = String.valueOf(1);
+
+    /** 状态参数 */
+    @Excel(name = "状态参数-2")
+    private static String two = String.valueOf(2);
+
+    /** 状态参数 */
+    @Excel(name = "状态参数-3")
+    private static String three = String.valueOf(3);
 
     /** 系统时间 */
     @Excel(name = "系统时间")
     private static Date date = new Date();
 
-    public static int getClose() {
-        return close;
+    public static String getZero() {
+        return zero;
     }
 
-    public static void setClose(int close) {
-        PjtConfig.close = close;
+    public static void setZero(String zero) {
+        PjtConfig.zero = zero;
     }
 
-    public static int getOpen() {
-        return open;
+    public static String getOne() {
+        return one;
     }
 
-    public static void setOpen(int open) {
-        PjtConfig.open = open;
+    public static void setOne(String one) {
+        PjtConfig.one = one;
+    }
+
+    public static String getTwo() {
+        return two;
+    }
+
+    public static void setTwo(String two) {
+        PjtConfig.two = two;
+    }
+
+    public static String getThree() {
+        return three;
+    }
+
+    public static void setThree(String three) {
+        PjtConfig.three = three;
     }
 
     public static Date getDate() {
