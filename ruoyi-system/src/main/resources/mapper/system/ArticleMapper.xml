@@ -27,7 +27,7 @@
         where art_id=#{articleId}
     </select>
 
-    <select id="selectArticle" parameterType="Article" resultMap="ArticleResult">
+    <select id="selectArticleByTitle" parameterType="Article" resultMap="ArticleResult">
         select art_id,art_title,art_description,art_content,status,del_flag,create_time,update_time from article
         where art_title=#{artTitle}
     </select>
@@ -55,6 +55,20 @@
         <if test="updateTime != null">#{updateTime}</if>
         )
     </insert>
+
+
+    <update id="updateArticle" parameterType="Article">
+        update article
+        <set>
+            <if test="artTitle != null and artTitle != ''">art_title = #{artTitle},</if>
+            <if test="artDescription != null and artDescription != ''">art_description = #{artDescription},</if>
+            <if test="artContent != null and artContent != ''">art_content = #{artContent},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        where art_id = #{articleId}
+    </update>
+
 
     <delete id="deleteArticleById" parameterType="Long">
         update article set del_flag = '1' where art_id = #{articleId}

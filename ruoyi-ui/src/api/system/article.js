@@ -28,6 +28,14 @@ export function addArticle(data) {
   })
 }
 
+// 修改文章
+export function updateArticle(data) {
+  return request({
+    url: '/article/manage',
+    method: 'put',
+    data: data
+  })
+}
 
 //删除文章
 export function deleteArticle(articleId) {

@@ -5,8 +5,10 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Article;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ArticleService;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +56,25 @@ public class ArticleController extends BaseController {
     @PostMapping("/add")
     public AjaxResult list(@Validated @RequestBody Article article)
     {
-        List<Article> articles = articleService.selectArticle(article);
+        List<Article> articles = articleService.selectArticleByTitle(article);
         if (articles!=null && articles.size()>0) {
             return error("新增失败，该文章已存在");
         }
         return toAjax(articleService.insertArticle(article));
+    }
+
+
+    @PreAuthorize("@ss.hasPermi('article:manage:edit')")
+    @Log(title = "文章管理-文章修改", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@Validated @RequestBody Article article)
+    {
+
+        List<Article> articles = articleService.selectArticleByTitle(article);
+        if (articles!=null && articles.size()>0) {
+            return error("修改失败，该文章标题已存在");
+        }
+        return toAjax(articleService.updateArticle(article));
     }
 
 

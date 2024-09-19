@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.Article;
+import com.ruoyi.common.core.domain.entity.SysUser;
 
 import java.util.List;
 
@@ -13,8 +14,8 @@ public interface ArticleService {
     //    查询文章 通过文章ID
     public Article selectArticleById(Long articleId);
 
-    //    查询文章
-    public List<Article> selectArticle(Article article);
+    //    查询文章 通过文章标题
+    public List<Article> selectArticleByTitle(Article article);
 
     //    新增文章
     public int insertArticle(Article article);
@@ -35,6 +36,18 @@ public interface ArticleService {
      * @return 结果
      */
     public int deleteArticleByIds(Long[] articleIds);
+
+
+    /**
+     * 修改文章信息
+     *
+     * @param article 文章信息
+     * @return 结果
+     */
+    public int updateArticle(Article article);
+
+
+
 
 
 

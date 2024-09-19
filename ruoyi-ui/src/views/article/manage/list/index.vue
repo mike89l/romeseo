@@ -20,7 +20,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:user:edit']"
+          v-hasPermi="['article:manage:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -31,7 +31,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:user:remove']"
+          v-hasPermi="['article:manage:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -78,14 +78,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:user:edit']"
+            v-hasPermi="['article:manage:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:user:remove']"
+            v-hasPermi="['article:manage:remove']"
           >删除</el-button>
         </template>
 
@@ -117,17 +117,17 @@
                   <el-input v-model="form.artContent" placeholder="请输入文章内容" maxlength="30" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="文章状态">
-                  <el-radio-group v-model="form.status">
-                    <el-radio
-                      v-for="dict in dict.type.sys_normal_disable"
-                      :key="dict.value"
-                      :label="dict.value"
-                    >{{dict.label}}</el-radio>
-                  </el-radio-group>
-                </el-form-item>
-              </el-col>
+<!--              <el-col :span="12">-->
+<!--                <el-form-item label="文章状态">-->
+<!--                  <el-radio-group v-model="form.status">-->
+<!--                    <el-radio-->
+<!--                      v-for="dict in dict.type.sys_normal_disable"-->
+<!--                      :key="dict.value"-->
+<!--                      :label="dict.value"-->
+<!--                    >{{dict.label}}</el-radio>-->
+<!--                  </el-radio-group>-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
               <!--              <el-col :span="12">-->
               <!--                <el-form-item label="归属部门" prop="deptId">-->
               <!--                  <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />-->
@@ -244,9 +244,8 @@
 </template>
 
 <script>
-import {addArticle, deleteArticle, getarticleList,getarticle} from "@/api/system/article";
+import {addArticle,updateArticle,deleteArticle, getarticleList,getarticle} from "@/api/system/article";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import {addUser, delUser, getUser, updateUser} from "@/api/system/user";
 import Treeselect from "@riophae/vue-treeselect";
 import {getToken} from "@/utils/auth";
 
@@ -436,17 +435,24 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (valid) {
+          if (this.form.articleId != undefined) {
+            // 修改文章
+            updateArticle(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.articleList();
+            });
+          } else {
+            // 新增文章
             addArticle(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.articleList();
             });
-          } else {
-            console.log('error submit!!');
-            return false;
           }
         }
+
+
 
         // if (valid) {
         //   if (valid) {

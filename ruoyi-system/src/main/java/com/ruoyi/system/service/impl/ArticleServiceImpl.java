@@ -30,12 +30,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> selectArticle(Article article) {
-        List<Article> articles = articleMapper.selectArticle(article);
+    public List<Article> selectArticleByTitle(Article article) {
+        List<Article> articles = articleMapper.selectArticleByTitle(article);
         return articles;
     }
 
     @Override
+    @Transactional
     public int insertArticle(Article article) {
         article.setCreateTime(PjtConfig.getDate());
         article.setUpdateTime(PjtConfig.getDate());
@@ -70,6 +71,14 @@ public class ArticleServiceImpl implements ArticleService {
     @Transactional
     public int deleteArticleByIds(Long[] articleIds) {
         int s = articleMapper.deleteArticleByIds(articleIds);
+        return s;
+    }
+
+    @Override
+    @Transactional
+    public int updateArticle(Article article) {
+        article.setUpdateTime(PjtConfig.getDate());
+        int s = articleMapper.updateArticle(article);
         return s;
     }
 }
