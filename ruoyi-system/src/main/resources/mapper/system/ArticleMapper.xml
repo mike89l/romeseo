@@ -20,6 +20,19 @@
     <select id="selectArticleList" resultMap="ArticleResult">
         select art_id,art_title,art_description,art_content,status,del_flag,create_time,update_time from article
         where del_flag = '0'
+        <if test="artTitle != null and artTitle != ''">
+            AND art_title = #{artTitle}
+        </if>
+        <if test="status != null and status != ''">
+            AND status = #{status}
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(create_time,'%Y%m%d') &gt;= date_format(#{params.beginTime},'%Y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(create_time,'%Y%m%d') &lt;= date_format(#{params.endTime},'%Y%m%d')
+        </if>
+
     </select>
 
     <select id="selectArticleById" parameterType="Long" resultMap="ArticleResult">
