@@ -104,11 +104,20 @@
 
     <el-table v-loading="loading" :data="article" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="文章ID" align="center" key="articleId" prop="articleId"  />
-      <el-table-column label="文章标题" align="center" key="artTitle" prop="artTitle"  />
-      <el-table-column label="文章描述" align="center" key="artDescription" prop="artDescription"  />
-      <el-table-column label="文章内容" align="center" key="artContent" prop="artContent"  />
-      <el-table-column label="状态" align="center" key="status" prop="status"  />
+      <el-table-column label="文章ID" align="center" key="articleId" prop="articleId"  v-if="columns[0].visible"/>
+      <el-table-column label="文章标题" align="center" key="artTitle" prop="artTitle"  v-if="columns[1].visible"/>
+      <el-table-column label="文章描述" align="center" key="artDescription" prop="artDescription"  v-if="columns[2].visible"/>
+      <el-table-column label="文章内容" align="center" key="artContent" prop="artContent"  v-if="columns[3].visible"/>
+      <el-table-column label="状态" align="center" key="status" v-if="columns[4].visible">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" key="createTime" prop="createTime"  />
       <el-table-column label="修改时间" align="center" key="updateTime" prop="updateTime"  />
       <el-table-column
@@ -289,10 +298,11 @@
 </template>
 
 <script>
-import {addArticle,updateArticle,deleteArticle, getarticleList,getarticle} from "@/api/system/article";
+import {addArticle,updateArticle,deleteArticle,getarticleList,changeArticleStatus,getarticle} from "@/api/system/article";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import Treeselect from "@riophae/vue-treeselect";
 import {getToken} from "@/utils/auth";
+import {changeUserStatus} from "@/api/system/user";
 
 
 export default {
@@ -357,10 +367,11 @@ export default {
       },
       // 列信息
       columns: [
-        { key: 0, label: `文章标题`, visible: true },
-        { key: 1, label: `文章描述`, visible: true },
-        { key: 2, label: `文章内容`, visible: true },
-        { key: 5, label: `状态`, visible: true },
+        { key: 0, label: `文章ID`, visible: true },
+        { key: 1, label: `文章标题`, visible: true },
+        { key: 2, label: `文章描述`, visible: true },
+        { key: 3, label: `文章内容`, visible: true },
+        { key: 4, label: `状态`, visible: true },
       ],
       // 表单校验
       rules: {
@@ -459,6 +470,17 @@ export default {
       this.$refs.upload.clearFiles();
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
       this.articleList();
+    },
+    // 用户状态修改
+    handleStatusChange(row) {
+      let text = row.status === "0" ? "启用" : "停用";
+      this.$modal.confirm('确认要"  ' + text + '' + row.artTitle + '  "文章吗？').then(function() {
+        return changeArticleStatus(row.articleId, row.status);
+      }).then(() => {
+        this.$modal.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === "0" ? "1" : "0";
+      });
     },
     // 取消按钮
     cancel() {

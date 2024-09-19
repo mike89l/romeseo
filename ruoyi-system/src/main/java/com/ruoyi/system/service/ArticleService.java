@@ -46,9 +46,7 @@ public interface ArticleService {
      */
     public int updateArticle(Article article);
 
-
-
-
+    public int updateArticleStatus(Article article);
 
 
 }

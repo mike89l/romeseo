@@ -37,6 +37,19 @@ export function updateArticle(data) {
   })
 }
 
+// 文章状态修改
+export function changeArticleStatus(articleId, status) {
+  const data = {
+    articleId,
+    status
+  }
+  return request({
+    url: '/article/manage/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
+
 //删除文章
 export function deleteArticle(articleId) {
   return request({

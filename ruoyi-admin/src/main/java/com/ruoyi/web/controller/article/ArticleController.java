@@ -77,6 +77,16 @@ public class ArticleController extends BaseController {
         return toAjax(articleService.updateArticle(article));
     }
 
+    /**
+     * 状态修改
+     */
+    @PreAuthorize("@ss.hasPermi('article:manage:edit')")
+    @Log(title = "文章管理-文章状态修改", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody Article article)
+    {
+        return toAjax(articleService.updateArticleStatus(article));
+    }
 
 
     /**

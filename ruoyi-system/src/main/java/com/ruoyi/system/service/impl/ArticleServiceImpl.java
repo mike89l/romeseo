@@ -81,4 +81,9 @@ public class ArticleServiceImpl implements ArticleService {
         int s = articleMapper.updateArticle(article);
         return s;
     }
+
+    @Override
+    public int updateArticleStatus(Article article) {
+        return articleMapper.updateArticle(article);
+    }
 }
