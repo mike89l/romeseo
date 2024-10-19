@@ -8,4 +8,11 @@ public interface EnterpriseMapper {
 
     List<Enterprise> selectEnterprise(Enterprise enterprise);
 
+    int insertEnterprise(Enterprise enterprise);
+
+    Enterprise selectEnterpriseById(Long enterpriseId);
+
+    int updateEnterprise(Enterprise enterprise);
+
+    int deleteEnterpriseByIds(Long[] enterpriseId);
 }

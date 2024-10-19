@@ -160,21 +160,42 @@
           <el-form ref="form" :model="form" :rules="rules" label-width="140px">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="请输入文章标题" prop="artTitle">
-                  <el-input v-model="form.artTitle" placeholder="请输入文章标题" maxlength="30" />
+                <el-form-item label="企业名称" prop="enterpriseName">
+                  <el-input v-model="form.enterpriseName" placeholder="请输入企业名称" maxlength="30" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="请输入文章描述" prop="artDescription">
-                  <el-input v-model="form.artDescription" placeholder="请输入文章描述" maxlength="30" />
+                <el-form-item label="企业网站" prop="enterpriseUrl">
+                  <el-input v-model="form.enterpriseUrl" placeholder="请输入企业网站" maxlength="30" />
                 </el-form-item>
               </el-col>
-            </el-row>
-
-            <el-row>
               <el-col :span="12">
-                <el-form-item label="请输入文章内容" prop="artContent">
-                  <el-input v-model="form.artContent" placeholder="请输入文章内容" maxlength="30" />
+                <el-form-item label="企业类型">
+                  <el-select v-model="form.enterpriseType" placeholder="企业类型">
+                    <el-option
+                      v-for="dict in enterpriseTypeOptions"
+                      :key="dict.value"
+                      :label="dict.label"
+                      :value="dict.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="企业状态">
+                  <el-select v-model="form.status" placeholder="企业状态">
+                    <el-option
+                      v-for="dict in enterpriseStatusOptions"
+                      :key="dict.value"
+                      :label="dict.label"
+                      :value="dict.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="企业关键词" prop="enterpriseUrl">
+                  <el-input v-model="form.keyword" placeholder="企业关键词" maxlength="30" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -207,7 +228,7 @@
 </template>
 
 <script>
-import {getEnterpriseList} from "@/api/system/enterprise";
+import {getEnterpriseList,addEnterprise,getEnterprise,updateEnterprise,changeEnterpriseStatus,deleteEnterprise} from "@/api/system/enterprise";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import Treeselect from "@riophae/vue-treeselect";
 import {getToken} from "@/utils/auth";
@@ -271,7 +292,8 @@ export default {
         pageSize: 10,
         enterpriseId: '',
         enterpriseName: '',
-        enterpriseUrl:''
+        enterpriseUrl:'',
+        enterpriseType:''
       },
       // 列信息
       columns: [
@@ -281,16 +303,33 @@ export default {
         { key: 3, label: `企业网址`, visible: true },
         { key: 4, label: `状态`, visible: true },
       ],
+      enterpriseTypeOptions:[{
+        value: '4',
+        label: '普通企业'
+      },{
+        value: '5',
+        label: '自营站'
+      },{
+        value: '6',
+        label: '代理商'
+      }],
+      enterpriseStatusOptions:[{
+        value: '0',
+        label: '正常'
+      },{
+        value: '1',
+        label: '停用'
+      }],
       // 表单校验
       rules: {
-        artTitle: [
-          { required: true, message: "文章标题不能为空", trigger: "blur" }
+        enterpriseName: [
+          { required: true, message: "企业名称不能为空", trigger: "blur" }
         ],
-        artDescription: [
-          { required: true, message: "文章描述不能为空", trigger: "blur" }
+        enterpriseUrl: [
+          { required: true, message: "企业网站不能为空", trigger: "blur" }
         ],
-        artContent: [
-          { required: true, message: "文章内容不能为空", trigger: "blur" }
+        keyword: [
+          { required: true, message: "企业关键词不能为空", trigger: "blur" }
         ]
       }
     }
@@ -350,11 +389,11 @@ export default {
       this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", "导入结果", { dangerouslyUseHTMLString: true });
       this.enterpriseList();
     },
-    // 用户状态修改
+    // 企业状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用";
-      this.$modal.confirm('确认要"  ' + text + '' + row.artTitle + '  "文章吗？').then(function() {
-        return changeenterpriseStatus(row.enterpriseId, row.status);
+      this.$modal.confirm('确认要"  ' + text + '' + '  "企业吗？').then(function() {
+        return changeEnterpriseStatus(row.enterpriseId, row.status);
       }).then(() => {
         this.$modal.msgSuccess(text + "成功");
       }).catch(function() {
@@ -369,9 +408,10 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        artTitle: undefined,
-        artDescription: undefined,
-        artContent: undefined,
+        enterpriseId: undefined,
+        enterpriseName: undefined,
+        enterpriseUrl: undefined,
+        enterpriseType: undefined,
         status: undefined,
         delFlag:undefined
       };
@@ -381,7 +421,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加文章";
+      this.title = "添加企业";
       // getUser().then(response => {
       //   this.postOptions = response.posts;
       //   this.roleOptions = response.roles;
@@ -394,57 +434,22 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.enterpriseId != undefined) {
-            // 修改文章
-            updateenterprise(this.form).then(response => {
+            // 修改企业
+            updateEnterprise(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.enterpriseList();
             });
           } else {
-            // 新增文章
-            addenterprise(this.form).then(response => {
+            // 新增企业
+            addEnterprise(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.enterpriseList();
             });
           }
         }
-
-
-
-        // if (valid) {
-        //   if (valid) {
-        //     addenterprise(this.form).then(response => {
-        //       this.$modal.msgSuccess("新增成功");
-        //       this.open = false;
-        //       this.enterpriseList();
-        //     });
-        //   } else {
-        //     console.log('error submit!!');
-        //     return false;
-        //   }
-        // }
       });
-
-
-
-      // this.$refs["form"].validate(valid => {
-      //   if (valid) {
-      //     if (this.form.userId != undefined) {
-      //       updateUser(this.form).then(response => {
-      //         this.$modal.msgSuccess("修改成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     } else {
-      //       addUser(this.form).then(response => {
-      //         this.$modal.msgSuccess("新增成功");
-      //         this.open = false;
-      //         this.getList();
-      //       });
-      //     }
-      //   }
-      // });
     },
     handleSelectionChange(){},
     handleEdit(index, row) {
@@ -454,10 +459,10 @@ export default {
     handleUpdate(row) {
       this.reset();
       const enterpriseId = row.enterpriseId || this.ids;
-      getenterprise(enterpriseId).then(response => {
+      getEnterprise(enterpriseId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改文章";
+        this.title = "修改企业";
         // this.form.password = "";
       });
     },
@@ -466,7 +471,7 @@ export default {
     handleDelete(row) {
       const enterpriseIds = row.enterpriseId || this.ids;
       this.$modal.confirm('是否确认删除用户编号为"' + enterpriseIds + '"的数据项？').then(function() {
-        return deleteenterprise(enterpriseIds);
+        return deleteEnterprise(enterpriseIds);
       }).then(() => {
         this.enterpriseList();
         this.$modal.msgSuccess("删除成功");

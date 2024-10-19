@@ -19,7 +19,7 @@ public class Enterprise extends BaseEntity {
     private String enterpriseUrl;
 
     /** 企业类型 */
-    @Excel(name = "企业类型", readConverterExp = "0=,1=")
+    @Excel(name = "企业类型", readConverterExp = "4=普通企业,5=自营站,6=代理商")
     private String enterpriseType;
 
     /** 关键词 */
@@ -34,15 +34,6 @@ public class Enterprise extends BaseEntity {
     @Excel(name = "删除状态", readConverterExp = "0=存在,1=删除")
     private String delFlag;
 
-    public Enterprise(Long enterpriseId, String enterpriseName, String enterpriseType, String enterpriseUrl, String keyword, String status, String delFlag) {
-        this.enterpriseId = enterpriseId;
-        this.enterpriseName = enterpriseName;
-        this.enterpriseType = enterpriseType;
-        this.enterpriseUrl = enterpriseUrl;
-        this.keyword = keyword;
-        this.status = status;
-        this.delFlag = delFlag;
-    }
 
     public Long getEnterpriseId() {
         return enterpriseId;
@@ -60,20 +51,20 @@ public class Enterprise extends BaseEntity {
         this.enterpriseName = enterpriseName;
     }
 
-    public String getEnterpriseType() {
-        return enterpriseType;
-    }
-
-    public void setEnterpriseType(String enterpriseType) {
-        this.enterpriseType = enterpriseType;
-    }
-
     public String getEnterpriseUrl() {
         return enterpriseUrl;
     }
 
     public void setEnterpriseUrl(String enterpriseUrl) {
         this.enterpriseUrl = enterpriseUrl;
+    }
+
+    public String getEnterpriseType() {
+        return enterpriseType;
+    }
+
+    public void setEnterpriseType(String enterpriseType) {
+        this.enterpriseType = enterpriseType;
     }
 
     public String getKeyword() {
@@ -92,24 +83,24 @@ public class Enterprise extends BaseEntity {
         this.status = status;
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("enterpriseId", enterpriseId)
+                .append("enterpriseName", enterpriseName)
+                .append("enterpriseUrl", enterpriseUrl)
+                .append("enterpriseType", enterpriseType)
+                .append("keyword", keyword)
+                .append("status", status)
+                .append("delFlag", delFlag)
+                .toString();
+    }
+
     public String getDelFlag() {
         return delFlag;
     }
 
     public void setDelFlag(String delFlag) {
         this.delFlag = delFlag;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("enterpriseId", enterpriseId)
-                .append("enterpriseName", enterpriseName)
-                .append("enterpriseType", enterpriseType)
-                .append("enterpriseUrl", enterpriseUrl)
-                .append("keyword", keyword)
-                .append("status", status)
-                .append("delFlag", delFlag)
-                .toString();
     }
 }
