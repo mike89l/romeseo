@@ -10,7 +10,7 @@ spring:
 #                username: testdate
 #                password: LsBJbSAfpzBK6jGW
             master:
-                url: jdbc:mysql://127.0.0.1:3306/testdate?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+                url: jdbc:mysql://127.0.0.1:3306/testdata?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: root
                 password: 123456
             # 从库数据源
