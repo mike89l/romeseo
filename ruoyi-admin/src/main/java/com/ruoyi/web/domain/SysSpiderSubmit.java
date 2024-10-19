@@ -16,11 +16,11 @@ public class SysSpiderSubmit extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
-    private Long id;
+    private int id;
 
     /** url数量 */
     @Excel(name = "url数量")
-    private Long urlnum;
+    private int urlnum;
 
     /** url */
     @Excel(name = "url")
@@ -32,76 +32,69 @@ public class SysSpiderSubmit extends BaseEntity
 
     /** 是否强引 */
     @Excel(name = "是否强引")
-    private Long forcedBootState;
+    private int forcedBootState;
 
     /** 所需积分 */
     @Excel(name = "所需积分")
-    private Long integral;
+    private int integral;
 
-    public void setId(Long id) 
-    {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public int getUrlnum() {
+        return urlnum;
     }
-    public void setUrlnum(Long urlnum) 
-    {
+
+    public void setUrlnum(int urlnum) {
         this.urlnum = urlnum;
     }
 
-    public Long getUrlnum() 
-    {
-        return urlnum;
+    public String getUrl() {
+        return url;
     }
-    public void setUrl(String url) 
-    {
+
+    public void setUrl(String url) {
         this.url = url;
     }
 
-    public String getUrl() 
-    {
-        return url;
+    public String getPool() {
+        return pool;
     }
-    public void setPool(String pool) 
-    {
+
+    public void setPool(String pool) {
         this.pool = pool;
     }
 
-    public String getPool() 
-    {
-        return pool;
+    public int getForcedBootState() {
+        return forcedBootState;
     }
-    public void setForcedBootState(Long forcedBootState) 
-    {
+
+    public void setForcedBootState(int forcedBootState) {
         this.forcedBootState = forcedBootState;
     }
 
-    public Long getForcedBootState() 
-    {
-        return forcedBootState;
-    }
-    public void setIntegral(Long integral) 
-    {
-        this.integral = integral;
+    public int getIntegral() {
+        return integral;
     }
 
-    public Long getIntegral() 
-    {
-        return integral;
+    public void setIntegral(int integral) {
+        this.integral = integral;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("urlnum", getUrlnum())
-            .append("url", getUrl())
-            .append("pool", getPool())
-            .append("forcedBootState", getForcedBootState())
-            .append("integral", getIntegral())
-            .toString();
+        return "SysSpiderSubmit{" +
+                "id=" + id +
+                ", urlnum=" + urlnum +
+                ", url='" + url + '\'' +
+                ", pool='" + pool + '\'' +
+                ", forcedBootState=" + forcedBootState +
+                ", integral=" + integral +
+                '}';
     }
 }

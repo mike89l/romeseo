@@ -4,9 +4,9 @@ import request from '@/utils/request'
 // 提交链接入库
 export function insertdata(data) {
   return request({
-    url: '/system/subnit/add',
-    method: 'get',
-    params: data
+    url: '/system/submit/add',
+    method: 'post',
+    data: data
   })
 }
 

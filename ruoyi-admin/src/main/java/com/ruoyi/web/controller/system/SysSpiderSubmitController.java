@@ -76,10 +76,12 @@ public class SysSpiderSubmitController extends BaseController
      * 新增【请填写功能名称】
      */
     @PreAuthorize("@ss.hasPermi('system:submit:add')")
-    @Log(title = "【请填写功能名称】", businessType = BusinessType.INSERT)
-    @PostMapping
+    @Log(title = "添加链接", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody SysSpiderSubmit sysSpiderSubmit)
     {
+        System.out.println("接收到的请求体: " + sysSpiderSubmit);
+        System.out.println("数据：" + sysSpiderSubmit);
         return toAjax(sysSpiderSubmitService.insertSysSpiderSubmit(sysSpiderSubmit));
     }
 

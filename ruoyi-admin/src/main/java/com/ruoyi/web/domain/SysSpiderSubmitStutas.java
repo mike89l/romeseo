@@ -16,11 +16,11 @@ public class SysSpiderSubmitStutas extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private Long id;
+    private int id;
 
     /** url提交id */
     @Excel(name = "url提交id")
-    private Long submitId;
+    private int submitId;
 
     /** url选中的池子 */
     @Excel(name = "url选中的池子")
@@ -28,66 +28,60 @@ public class SysSpiderSubmitStutas extends BaseEntity
 
     /** 表单状态 */
     @Excel(name = "表单状态")
-    private Long submitStutsa;
+    private int submitStutsa;
 
     /** 备注 */
     @Excel(name = "备注")
     private String coment;
 
-    public void setId(Long id) 
-    {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
-    public Long getId() 
-    {
-        return id;
+    public int getSubmitId() {
+        return submitId;
     }
-    public void setSubmitId(Long submitId) 
-    {
+
+    public void setSubmitId(int submitId) {
         this.submitId = submitId;
     }
 
-    public Long getSubmitId() 
-    {
-        return submitId;
+    public String getSubmitType() {
+        return submitType;
     }
-    public void setSubmitType(String submitType) 
-    {
+
+    public void setSubmitType(String submitType) {
         this.submitType = submitType;
     }
 
-    public String getSubmitType() 
-    {
-        return submitType;
+    public int getSubmitStutsa() {
+        return submitStutsa;
     }
-    public void setSubmitStutsa(Long submitStutsa) 
-    {
+
+    public void setSubmitStutsa(int submitStutsa) {
         this.submitStutsa = submitStutsa;
     }
 
-    public Long getSubmitStutsa() 
-    {
-        return submitStutsa;
-    }
-    public void setComent(String coment) 
-    {
-        this.coment = coment;
+    public String getComent() {
+        return coment;
     }
 
-    public String getComent() 
-    {
-        return coment;
+    public void setComent(String coment) {
+        this.coment = coment;
     }
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("submitId", getSubmitId())
-            .append("submitType", getSubmitType())
-            .append("submitStutsa", getSubmitStutsa())
-            .append("coment", getComent())
-            .toString();
+        return "SysSpiderSubmitStutas{" +
+                "id=" + id +
+                ", submitId=" + submitId +
+                ", submitType='" + submitType + '\'' +
+                ", submitStutsa=" + submitStutsa +
+                ", coment='" + coment + '\'' +
+                '}';
     }
 }
