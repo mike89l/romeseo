@@ -1,9 +1,9 @@
-package com.ruoyi.web.service;
+package com.ruoyi.system.service;
 
-import com.ruoyi.web.domain.SysSpiderSubmit;
+import com.ruoyi.system.domain.SysSpiderSubmitStutas;
 
 import java.util.List;
-//import com.ruoyi.system.domain.SysSpiderSubmit;
+//import com.ruoyi.system.domain.SysSpiderSubmitStutas;
 
 /**
  * 【请填写功能名称】Service接口
@@ -11,7 +11,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2024-10-13
  */
-public interface ISysSpiderSubmitService 
+public interface ISysSpiderSubmitStutasService 
 {
     /**
      * 查询【请填写功能名称】
@@ -19,31 +19,31 @@ public interface ISysSpiderSubmitService
      * @param id 【请填写功能名称】主键
      * @return 【请填写功能名称】
      */
-    public SysSpiderSubmit selectSysSpiderSubmitById(Long id);
+    public SysSpiderSubmitStutas selectSysSpiderSubmitStutasById(Long id);
 
     /**
      * 查询【请填写功能名称】列表
      * 
-     * @param sysSpiderSubmit 【请填写功能名称】
+     * @param sysSpiderSubmitStutas 【请填写功能名称】
      * @return 【请填写功能名称】集合
      */
-    public List<SysSpiderSubmit> selectSysSpiderSubmitList(SysSpiderSubmit sysSpiderSubmit);
+    public List<SysSpiderSubmitStutas> selectSysSpiderSubmitStutasList(SysSpiderSubmitStutas sysSpiderSubmitStutas);
 
     /**
      * 新增【请填写功能名称】
      * 
-     * @param sysSpiderSubmit 【请填写功能名称】
+     * @param sysSpiderSubmitStutas 【请填写功能名称】
      * @return 结果
      */
-    public int insertSysSpiderSubmit(SysSpiderSubmit sysSpiderSubmit);
+    public int insertSysSpiderSubmitStutas(SysSpiderSubmitStutas sysSpiderSubmitStutas);
 
     /**
      * 修改【请填写功能名称】
      * 
-     * @param sysSpiderSubmit 【请填写功能名称】
+     * @param sysSpiderSubmitStutas 【请填写功能名称】
      * @return 结果
      */
-    public int updateSysSpiderSubmit(SysSpiderSubmit sysSpiderSubmit);
+    public int updateSysSpiderSubmitStutas(SysSpiderSubmitStutas sysSpiderSubmitStutas);
 
     /**
      * 批量删除【请填写功能名称】
@@ -51,7 +51,7 @@ public interface ISysSpiderSubmitService
      * @param ids 需要删除的【请填写功能名称】主键集合
      * @return 结果
      */
-    public int deleteSysSpiderSubmitByIds(Long[] ids);
+    public int deleteSysSpiderSubmitStutasByIds(Long[] ids);
 
     /**
      * 删除【请填写功能名称】信息
@@ -59,5 +59,5 @@ public interface ISysSpiderSubmitService
      * @param id 【请填写功能名称】主键
      * @return 结果
      */
-    public int deleteSysSpiderSubmitById(Long id);
+    public int deleteSysSpiderSubmitStutasById(Long id);
 }

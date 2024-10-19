@@ -1,10 +1,13 @@
-package com.ruoyi.web.service.impl;
+package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
-import com.ruoyi.web.domain.SysSpiderSubmit;
-import com.ruoyi.web.mapper.SysSpiderSubmitMapper;
-import com.ruoyi.web.service.ISysSpiderSubmitService;
+import com.ruoyi.system.domain.SysSpiderSubmit;
+//import com.ruoyi.web.mapper.SysSpiderSubmitMapper;
+//import com.ruoyi.web.mapper.SysSpiderSubmitMapper;
+import com.ruoyi.system.mapper.SysSpiderSubmitMapper;
+//import com.ruoyi.web.service.ISysSpiderSubmitService;
+import com.ruoyi.system.service.ISysSpiderSubmitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import com.ruoyi.system.mapper.SysSpiderSubmitMapper;

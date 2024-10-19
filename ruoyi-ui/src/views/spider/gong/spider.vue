@@ -88,7 +88,7 @@ export default {
       }
 
       const data = {
-        id: 0, // 假设ID由服务器生成
+        // id: 0, // 假设ID由服务器生成
         urlnum: this.quantity,
         url: this.notes,
         pool: this.spiderPool,

@@ -1,10 +1,12 @@
-package com.ruoyi.web.service.impl;
+package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
-import com.ruoyi.web.domain.SysSpiderSubmitStutas;
-import com.ruoyi.web.mapper.SysSpiderSubmitStutasMapper;
-import com.ruoyi.web.service.ISysSpiderSubmitStutasService;
+import com.ruoyi.system.domain.SysSpiderSubmitStutas;
+//import com.ruoyi.web.mapper.SysSpiderSubmitStutasMapper;
+import com.ruoyi.system.mapper.SysSpiderSubmitStutasMapper;
+//import com.ruoyi.web.service.ISysSpiderSubmitStutasService;
+import com.ruoyi.system.service.ISysSpiderSubmitStutasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import com.ruoyi.system.mapper.SysSpiderSubmitStutasMapper;

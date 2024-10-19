@@ -1,26 +1,27 @@
-package com.ruoyi.web.domain;
+package com.ruoyi.system.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.io.Serializable;
+
 /**
- * 【请填写功能名称】对象 sys_spider_submit
- * 
+ * SysSpiderSubmit对象
+ *
  * @author ruoyi
  * @date 2024-10-13
  */
-public class SysSpiderSubmit extends BaseEntity
-{
+public class SysSpiderSubmit extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
-    private int id;
+    private Integer id;
 
     /** url数量 */
     @Excel(name = "url数量")
-    private int urlnum;
+    private Integer urlnum;
 
     /** url */
     @Excel(name = "url")
@@ -32,25 +33,37 @@ public class SysSpiderSubmit extends BaseEntity
 
     /** 是否强引 */
     @Excel(name = "是否强引")
-    private int forcedBootState;
+    private Integer forcedBootState;
 
     /** 所需积分 */
     @Excel(name = "所需积分")
-    private int integral;
+    private Integer integral;
 
-    public int getId() {
+    public SysSpiderSubmit() {
+    }
+
+    public SysSpiderSubmit(Integer id, Integer urlnum, String url, String pool, Integer forcedBootState, Integer integral) {
+        this.id = id;
+        this.urlnum = urlnum;
+        this.url = url;
+        this.pool = pool;
+        this.forcedBootState = forcedBootState;
+        this.integral = integral;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getUrlnum() {
+    public Integer getUrlnum() {
         return urlnum;
     }
 
-    public void setUrlnum(int urlnum) {
+    public void setUrlnum(Integer urlnum) {
         this.urlnum = urlnum;
     }
 
@@ -70,31 +83,24 @@ public class SysSpiderSubmit extends BaseEntity
         this.pool = pool;
     }
 
-    public int getForcedBootState() {
+    public Integer getForcedBootState() {
         return forcedBootState;
     }
 
-    public void setForcedBootState(int forcedBootState) {
+    public void setForcedBootState(Integer forcedBootState) {
         this.forcedBootState = forcedBootState;
     }
 
-    public int getIntegral() {
+    public Integer getIntegral() {
         return integral;
     }
 
-    public void setIntegral(int integral) {
+    public void setIntegral(Integer integral) {
         this.integral = integral;
     }
 
     @Override
     public String toString() {
-        return "SysSpiderSubmit{" +
-                "id=" + id +
-                ", urlnum=" + urlnum +
-                ", url='" + url + '\'' +
-                ", pool='" + pool + '\'' +
-                ", forcedBootState=" + forcedBootState +
-                ", integral=" + integral +
-                '}';
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

@@ -3,8 +3,9 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.web.domain.SysSpiderSubmitStutas;
-import com.ruoyi.web.service.ISysSpiderSubmitStutasService;
+import com.ruoyi.system.domain.SysSpiderSubmitStutas;
+//import com.ruoyi.web.service.ISysSpiderSubmitStutasService;
+import com.ruoyi.system.service.ISysSpiderSubmitStutasService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

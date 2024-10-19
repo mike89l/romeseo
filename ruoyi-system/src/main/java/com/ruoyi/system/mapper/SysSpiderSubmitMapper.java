@@ -1,6 +1,6 @@
-package com.ruoyi.web.mapper;
+package com.ruoyi.system.mapper;
 
-import com.ruoyi.web.domain.SysSpiderSubmit;
+import com.ruoyi.system.domain.SysSpiderSubmit;
 
 import java.util.List;
 //import com.ruoyi.system.domain.SysSpiderSubmit;
