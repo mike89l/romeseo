@@ -13,11 +13,19 @@ export function insertdata(data) {
 // 查询链接列表
 export function listData(query) {
   return request({
-    url: '/system/subnit/list',
+    url: '/system/submit/list',
     method: 'get',
     params: query
   })
 }
+
+// 查询【请填写功能名称】详细
+export function getData(id) {
+    return request({
+      url: '/system/submit/' + id,
+      method: 'get'
+    })
+  }
 
 
 // 查询【请填写功能名称】列表

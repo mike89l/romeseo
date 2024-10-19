@@ -16,11 +16,11 @@ public class SysSpiderSubmitStutas extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
-    private int id;
+    private Integer id;
 
     /** url提交id */
     @Excel(name = "url提交id")
-    private int submitId;
+    private Integer submitId;
 
     /** url选中的池子 */
     @Excel(name = "url选中的池子")
@@ -28,25 +28,48 @@ public class SysSpiderSubmitStutas extends BaseEntity
 
     /** 表单状态 */
     @Excel(name = "表单状态")
-    private int submitStutsa;
+    private Integer submitStutsa;
 
     /** 备注 */
     @Excel(name = "备注")
     private String coment;
 
-    public int getId() {
+    @Excel(name = "链接数量")
+    private String urlnum;
+
+    @Excel(name = "是否强引")
+    private String forcedBootState;
+
+    @Excel(name = "时间")
+    private String ticktime;
+
+    @Override
+    public String toString() {
+        return "SysSpiderSubmitStutas{" +
+                "id=" + id +
+                ", submitId=" + submitId +
+                ", submitType='" + submitType + '\'' +
+                ", submitStutsa=" + submitStutsa +
+                ", coment='" + coment + '\'' +
+                ", urlnum='" + urlnum + '\'' +
+                ", forcedBootState='" + forcedBootState + '\'' +
+                ", ticktime='" + ticktime + '\'' +
+                '}';
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getSubmitId() {
+    public Integer getSubmitId() {
         return submitId;
     }
 
-    public void setSubmitId(int submitId) {
+    public void setSubmitId(Integer submitId) {
         this.submitId = submitId;
     }
 
@@ -58,11 +81,11 @@ public class SysSpiderSubmitStutas extends BaseEntity
         this.submitType = submitType;
     }
 
-    public int getSubmitStutsa() {
+    public Integer getSubmitStutsa() {
         return submitStutsa;
     }
 
-    public void setSubmitStutsa(int submitStutsa) {
+    public void setSubmitStutsa(Integer submitStutsa) {
         this.submitStutsa = submitStutsa;
     }
 
@@ -74,14 +97,27 @@ public class SysSpiderSubmitStutas extends BaseEntity
         this.coment = coment;
     }
 
-    @Override
-    public String toString() {
-        return "SysSpiderSubmitStutas{" +
-                "id=" + id +
-                ", submitId=" + submitId +
-                ", submitType='" + submitType + '\'' +
-                ", submitStutsa=" + submitStutsa +
-                ", coment='" + coment + '\'' +
-                '}';
+    public String getUrlnum() {
+        return urlnum;
+    }
+
+    public void setUrlnum(String urlnum) {
+        this.urlnum = urlnum;
+    }
+
+    public String getForcedBootState() {
+        return forcedBootState;
+    }
+
+    public void setForcedBootState(String forcedBootState) {
+        this.forcedBootState = forcedBootState;
+    }
+
+    public String getTicktime() {
+        return ticktime;
+    }
+
+    public void setTicktime(String ticktime) {
+        this.ticktime = ticktime;
     }
 }

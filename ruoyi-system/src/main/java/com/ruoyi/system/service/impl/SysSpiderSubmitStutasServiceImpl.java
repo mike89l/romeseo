@@ -46,7 +46,8 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public List<SysSpiderSubmitStutas> selectSysSpiderSubmitStutasList(SysSpiderSubmitStutas sysSpiderSubmitStutas)
     {
-        return sysSpiderSubmitStutasMapper.selectSysSpiderSubmitStutasList(sysSpiderSubmitStutas);
+        List<SysSpiderSubmitStutas> list = sysSpiderSubmitStutasMapper.selectSysSpiderSubmitStutasList(sysSpiderSubmitStutas);
+        return list;
     }
 
     /**
