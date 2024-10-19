@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSpiderSubmitMapper">
+    
+    <resultMap type="SysSpiderSubmit" id="SysSpiderSubmitResult">
+        <result property="id"    column="id"    />
+        <result property="urlnum"    column="urlnum"    />
+        <result property="url"    column="url"    />
+        <result property="pool"    column="pool"    />
+        <result property="forcedBootState"    column="forced_boot_state"    />
+        <result property="integral"    column="integral"    />
+    </resultMap>
+
+    <sql id="selectSysSpiderSubmitVo">
+        select id, urlnum, url, pool, forced_boot_state, integral from sys_spider_submit
+    </sql>
+
+    <select id="selectSysSpiderSubmitList" parameterType="SysSpiderSubmit" resultMap="SysSpiderSubmitResult">
+        <include refid="selectSysSpiderSubmitVo"/>
+        <where>  
+            <if test="urlnum != null "> and urlnum = #{urlnum}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="pool != null  and pool != ''"> and pool = #{pool}</if>
+            <if test="forcedBootState != null "> and forced_boot_state = #{forcedBootState}</if>
+            <if test="integral != null "> and integral = #{integral}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSpiderSubmitById" parameterType="Long" resultMap="SysSpiderSubmitResult">
+        <include refid="selectSysSpiderSubmitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysSpiderSubmit" parameterType="SysSpiderSubmit" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_spider_submit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="urlnum != null">urlnum,</if>
+            <if test="url != null">url,</if>
+            <if test="pool != null">pool,</if>
+            <if test="forcedBootState != null">forced_boot_state,</if>
+            <if test="integral != null">integral,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="urlnum != null">#{urlnum},</if>
+            <if test="url != null">#{url},</if>
+            <if test="pool != null">#{pool},</if>
+            <if test="forcedBootState != null">#{forcedBootState},</if>
+            <if test="integral != null">#{integral},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSpiderSubmit" parameterType="SysSpiderSubmit">
+        update sys_spider_submit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="urlnum != null">urlnum = #{urlnum},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="pool != null">pool = #{pool},</if>
+            <if test="forcedBootState != null">forced_boot_state = #{forcedBootState},</if>
+            <if test="integral != null">integral = #{integral},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSpiderSubmitById" parameterType="Long">
+        delete from sys_spider_submit where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSpiderSubmitByIds" parameterType="String">
+        delete from sys_spider_submit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

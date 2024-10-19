@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysSpiderSubmitStutasMapper">
+    
+    <resultMap type="SysSpiderSubmitStutas" id="SysSpiderSubmitStutasResult">
+        <result property="id"    column="id"    />
+        <result property="submitId"    column="submit_id"    />
+        <result property="submitType"    column="submit_type"    />
+        <result property="submitStutsa"    column="submit_stutsa"    />
+        <result property="coment"    column="coment"    />
+    </resultMap>
+
+    <sql id="selectSysSpiderSubmitStutasVo">
+        select id, submit_id, submit_type, submit_stutsa, coment from sys_spider_submit_stutas
+    </sql>
+
+    <select id="selectSysSpiderSubmitStutasList" parameterType="SysSpiderSubmitStutas" resultMap="SysSpiderSubmitStutasResult">
+        <include refid="selectSysSpiderSubmitStutasVo"/>
+        <where>  
+            <if test="submitId != null "> and submit_id = #{submitId}</if>
+            <if test="submitType != null  and submitType != ''"> and submit_type = #{submitType}</if>
+            <if test="submitStutsa != null "> and submit_stutsa = #{submitStutsa}</if>
+            <if test="coment != null  and coment != ''"> and coment = #{coment}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysSpiderSubmitStutasById" parameterType="Long" resultMap="SysSpiderSubmitStutasResult">
+        <include refid="selectSysSpiderSubmitStutasVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysSpiderSubmitStutas" parameterType="SysSpiderSubmitStutas" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_spider_submit_stutas
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="submitId != null">submit_id,</if>
+            <if test="submitType != null">submit_type,</if>
+            <if test="submitStutsa != null">submit_stutsa,</if>
+            <if test="coment != null">coment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="submitId != null">#{submitId},</if>
+            <if test="submitType != null">#{submitType},</if>
+            <if test="submitStutsa != null">#{submitStutsa},</if>
+            <if test="coment != null">#{coment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysSpiderSubmitStutas" parameterType="SysSpiderSubmitStutas">
+        update sys_spider_submit_stutas
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="submitId != null">submit_id = #{submitId},</if>
+            <if test="submitType != null">submit_type = #{submitType},</if>
+            <if test="submitStutsa != null">submit_stutsa = #{submitStutsa},</if>
+            <if test="coment != null">coment = #{coment},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysSpiderSubmitStutasById" parameterType="Long">
+        delete from sys_spider_submit_stutas where id = #{id}
+    </delete>
+
+    <delete id="deleteSysSpiderSubmitStutasByIds" parameterType="String">
+        delete from sys_spider_submit_stutas where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
