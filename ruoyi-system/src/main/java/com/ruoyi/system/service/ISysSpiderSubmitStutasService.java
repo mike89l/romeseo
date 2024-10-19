@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.SysSpiderSubmitStutas;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 //import com.ruoyi.system.domain.SysSpiderSubmitStutas;
@@ -11,6 +12,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2024-10-13
  */
+@Service
 public interface ISysSpiderSubmitStutasService 
 {
     /**

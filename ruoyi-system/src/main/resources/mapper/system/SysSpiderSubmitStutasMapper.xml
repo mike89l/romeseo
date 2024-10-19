@@ -10,10 +10,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="submitType"    column="submit_type"    />
         <result property="submitStutsa"    column="submit_stutsa"    />
         <result property="coment"    column="coment"    />
+        <result property="urlnum"    column="urlnum"    />
+        <result property="forcedBootState"    column="forced_boot_state"    />
+        <result property="ticktime"    column="ticktime"    />
     </resultMap>
 
     <sql id="selectSysSpiderSubmitStutasVo">
-        select id, submit_id, submit_type, submit_stutsa, coment from sys_spider_submit_stutas
+        select id, submit_id, submit_type, submit_stutsa, coment,urlnum, forced_boot_state,ticktime from sys_spider_submit_stutas
     </sql>
 
     <select id="selectSysSpiderSubmitStutasList" parameterType="SysSpiderSubmitStutas" resultMap="SysSpiderSubmitStutasResult">
@@ -23,6 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitType != null  and submitType != ''"> and submit_type = #{submitType}</if>
             <if test="submitStutsa != null "> and submit_stutsa = #{submitStutsa}</if>
             <if test="coment != null  and coment != ''"> and coment = #{coment}</if>
+            <if test="urlnum != null "> and urlnum = #{urlnum}</if>
+            <if test="forcedBootState != null "> and forced_boot_state = #{forcedBootState}</if>
+            <if test="ticktime != null "> and ticktime = #{ticktime}</if>
         </where>
     </select>
     
@@ -38,12 +44,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitType != null">submit_type,</if>
             <if test="submitStutsa != null">submit_stutsa,</if>
             <if test="coment != null">coment,</if>
+            <if test="urlnum != null">urlnum,</if>
+            <if test="forcedBootState != null">forced_boot_state,</if>
+            <if test="ticktime != null ">  ticktime,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="submitId != null">#{submitId},</if>
             <if test="submitType != null">#{submitType},</if>
             <if test="submitStutsa != null">#{submitStutsa},</if>
             <if test="coment != null">#{coment},</if>
+            <if test="urlnum != null">#{urlnum},</if>
+            <if test="forcedBootState != null">#{forcedBootState},</if>
+            <if test="ticktime != null ">  #{ticktime},</if>
          </trim>
     </insert>
 
@@ -54,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="submitType != null">submit_type = #{submitType},</if>
             <if test="submitStutsa != null">submit_stutsa = #{submitStutsa},</if>
             <if test="coment != null">coment = #{coment},</if>
+            <if test="ticktime != null "> and ticktime = #{ticktime}</if>
         </trim>
         where id = #{id}
     </update>

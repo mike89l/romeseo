@@ -1,127 +1,234 @@
 <template>
   <div class="page-container">
-    <!-- 顶部类型选择按钮 -->
+    <h1>链接管理</h1>
     <div class="filter-buttons">
-      <button v-for="(type, index) in types" 
-              :key="index" 
-              :class="{ active: selectedType === type }"
-              @click="selectType(type)">
-        {{ type }}
-      </button>
+      <button @click="fetchLinks">刷新数据</button>
     </div>
+    
+    <!-- 表格 -->
+    <table class="link-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>链接列表</th>
+          <th>链接数量</th>
+          <th>优化池</th>
+          <th>是否强引</th>
+          <th>添加时间</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="link in links" :key="link.id">
+          <td>{{ link.id }}</td>
+          <td>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="viewLink(link)"
+              v-hasPermi="['article:manage:edit']"
+            >查看</el-button>
+          </td>
+          <td>{{ link.urlnum }}</td>
+          <td>{{ getSubmitTypeName(link.submitType) }}</td>
+          <td>{{ link.forcedBootState === 0 ? '是' : '否' }}</td>
+          <td>{{ link.addTime || new Date().toLocaleString() }}</td>
+          <td>
+            <span :class="{'orange-background': link.submitStutsa === 0, 'blue-background': link.submitStutsa === 1}">
+              {{ link.submitStutsa === 0 ? '优化中' : '优化结束' }}
+            </span>
+          </td>
+          <td>
+            <button @click="openRemarkModal(link)">添加备注</button>
+            <button @click="deleteLink(link)">删除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <!-- 链接管理表格 -->
-    <div class="table-container">
-      <table class="link-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>链接</th>
-            <th>链接数</th>
-            <th>积分</th>
-            <th>蜘蛛池</th>
-            <th>301强引</th>
-            <th>包月支付</th>
-            <th>添加时间</th>
-            <th>状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(link, index) in paginatedLinks" :key="index">
-            <td>{{ link.id }}</td>
-            <td><button @click="viewLink(link)">查看</button></td>
-            <td>{{ link.linkCount }}</td>
-            <td>{{ link.points }}</td>
-            <td>{{ link.spiderPool }}</td>
-            <td>{{ link.redirect }}</td>
-            <td>{{ link.monthlyPayment }}</td>
-            <td>{{ link.addTime }}</td>
-            <td>{{ link.status }}</td>
-            <td>
-              <button @click="addRemark(link)">添加备注</button>
-              <button @click="deleteLink(link)">删除</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 分页控制 -->
+    <!-- 分页控件移到这里 -->
     <div class="pagination">
       <button @click="previousPage" :disabled="currentPage === 1">上一页</button>
       <span>{{ currentPage }} / {{ totalPages }}</span>
+      <input type="number" v-model="currentPage" min="1" :max="totalPages" @change="goToPage" aria-label="跳转到第几页">
       <button @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
+    </div>
+
+    <!-- 用于展示URL的弹窗 -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>链接详情</h2>
+        <p>URL: {{ linkUrl }}</p>
+        <button @click="closeModal">关闭</button>
+      </div>
+    </div>
+
+    <!-- 用于添加备注的弹窗 -->
+    <div v-if="showRemarkModal" class="modal-overlay">
+      <div class="modal-content">
+        <h2>添加备注</h2>
+        <input v-model="remark" placeholder="请输入备注内容" />
+        <button @click="submitRemark">提交</button>
+        <button @click="closeRemarkModal">关闭</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { listStutas, getData, updateStutas, delStutas } from '@/api/system/spider/url'; // 确保正确引入API
+import { toast } from 'vue-toastification'; // 提示通知库
+
 export default {
   data() {
     return {
-      types: ["全部", "百度", "谷歌", "搜狗", "神马", "Bing", "360"],
-      selectedType: "全部",
+      links: [],
       currentPage: 1,
-      itemsPerPage: 10,
-      links: [
-        // 示例数据
-        { id: 22209, linkCount: 1, points: 10, spiderPool: "谷歌", redirect: "否", monthlyPayment: "否", addTime: "2024-09-26 19:52:30", status: "运行中" },
-        { id: 18743, linkCount: 24, points: 2160, spiderPool: "谷歌", redirect: "否", monthlyPayment: "否", addTime: "2024-05-29 22:40:40", status: "结束" },
-        // ...更多数据
-      ]
+      totalPages: 0,
+      pageSize: 10,
+      showModal: false,
+      showRemarkModal: false, // 控制备注弹窗显示与否
+      selectedLink: null,
+      linkUrl: '',
+      remark: '' // 储存输入的备注内容
     };
   },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.filteredLinks.length / this.itemsPerPage);
-    },
-    paginatedLinks() {
-      const start = (this.currentPage - 1) * this.itemsPerPage;
-      const end = start + this.itemsPerPage;
-      return this.filteredLinks.slice(start, end);
-    },
-    filteredLinks() {
-      if (this.selectedType === "全部") {
-        return this.links;
-      }
-      return this.links.filter(link => link.spiderPool.includes(this.selectedType));
-    }
+  mounted() {
+    this.fetchLinks();
   },
   methods: {
-    selectType(type) {
-      this.selectedType = type;
-      this.currentPage = 1; // 重置到第一页
+    getSubmitTypeName(type) {
+      const typeMap = {
+        'baidu-x10': '百度',
+        'google-x35': 'Google',
+        // 可以继续添加其他映射
+      };
+      return typeMap[type] || type; // 返回对应的中文名称，如果没有映射则返回原值
     },
-    viewLink(link) {
-      alert(`查看链接: ${link.id}`);
+
+    async fetchLinks() {
+      try {
+        const response = await listStutas({ page: this.currentPage, size: this.pageSize });
+        this.links = response.rows;
+        console.log('链接数据:', response.rows);
+        this.totalPages = Math.ceil(response.total / this.pageSize);
+      } catch (error) {
+        toast.error('获取链接数据失败');
+        console.error(error);
+      }
     },
+
+    async viewLink(link) {
+      this.selectedLink = link;
+      try {
+        console.log('选中链接:', link);
+        const response = await getData(link.submitId);
+        console.log('API 响应:', response);
+        if (response && response.code === 200 && response.data && response.data.url) {
+          this.linkUrl = response.data.url;
+          console.log('获取的URL:', this.linkUrl);
+          this.showModal = true;
+        } else {
+          throw new Error('URL数据缺失');
+        }
+      } catch (error) {
+        const errorMessage = (error && error.message) || '获取链接详情失败';
+        toast.error(errorMessage);
+        console.error('获取链接详情时出错:', error);
+      }
+    },
+
+    openRemarkModal(link) {
+      this.selectedLink = link; // 存储当前链接
+      this.remark = ''; // 清空之前的备注内容
+      this.showRemarkModal = true; // 显示备注弹窗
+    },
+
+    async submitRemark() {
+      if (!this.remark) {
+        toast.error('备注内容不能为空');
+        return;
+      }
+
+      try {
+        const response = await updateStutas({ id: this.selectedLink.id, coment: this.remark });
+        if (response && response.code === 200) {
+          toast.success(`已添加备注: ${response.data.remark}`);
+          this.showRemarkModal = false; // 关闭备注弹窗
+          this.remark = ''; // 清空备注内容
+          console.log('备注弹窗已关闭'); // 添加调试输出
+        } else {
+          throw new Error('添加备注失败');
+        }
+      } catch (error) {
+        const errorMessage = (error && error.message) || '添加备注失败';
+        toast.error(errorMessage);
+        console.error('添加备注时出错:', error);
+      }
+    },
+
+    closeModal() {
+      this.showModal = false;
+      this.selectedLink = null;
+      this.linkUrl = '';
+    },
+
+    closeRemarkModal() {
+      this.showRemarkModal = false;
+      this.selectedLink = null;
+      this.remark = ''; // 清空备注内容
+    },
+
     addRemark(link) {
-      alert(`添加备注: ${link.id}`);
+      toast.success(`添加备注: ${link.id}`);
     },
-    deleteLink(link) {
+
+    async deleteLink(link) {
       const confirmed = confirm(`确定要删除ID为 ${link.id} 的链接吗？`);
       if (confirmed) {
-        this.links = this.links.filter(l => l.id !== link.id);
+        try {
+          await delStutas(link.id);
+          this.links = this.links.filter(l => l.id !== link.id);
+          toast.success(`已删除链接: ${link.id}`);
+        } catch (error) {
+          toast.error(`删除链接失败: ${error.message}`);
+        }
       }
     },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
+
     previousPage() {
       if (this.currentPage > 1) {
-        this.currentPage--;
+        this.currentPage--
+        this.fetchLinks();
       }
-    }
+    },
+
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++
+        this.fetchLinks()
+      }
+    },
+
+    goToPage() {
+      this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages));
+      this.fetchLinks();
+    },
+  },
+  watch: {
+    showModal(newVal) {
+      console.log('弹窗状态:', newVal);
+    },
   }
 };
 </script>
 
+
 <style scoped>
 .page-container {
-  width: 1000px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -138,19 +245,10 @@ export default {
   cursor: pointer;
 }
 
-.filter-buttons button.active {
-  background-color: #007bff;
-  color: white;
-}
-
-.table-container {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
 .link-table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
 .link-table th, .link-table td {
@@ -163,6 +261,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 20px;
 }
 
 .pagination button {
@@ -173,5 +272,49 @@ export default {
 .pagination button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* 备注弹窗样式 */
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* 背景颜色样式 */
+.orange-background {
+  background-color: orange; /* 橙色背景 */
+  color: white; /* 文字颜色可以根据需要修改 */
+  padding: 2px 5px; /* 背景颜色包裹文字 */
+  border-radius: 4px; /* 圆角边框 */
+}
+
+.blue-background {
+  background-color: lightblue; /* 蓝色背景 */
+  color: black; /* 文字颜色可以根据需要修改 */
+  padding: 2px 5px; /* 背景颜色包裹文字 */
+  border-radius: 4px; /* 圆角边框 */
 }
 </style>

@@ -19,7 +19,7 @@
 
       <div class="form-group">
         <label for="spider-pool" class="form-label">蜘蛛池:</label>
-        <select v-model="spiderPool" id="spider-pool" @change="calculateDeduction">
+        <select v-model="spiderPool" id="spider-pool">
           <option value="baidu-x10">百度 x10</option>
           <option value="google-x35">Google x35</option>
         </select>
@@ -27,7 +27,7 @@
 
       <div class="form-group">
         <label for="redirect" class="form-label">301跳转:</label>
-        <select v-model="redirect" id="redirect" @change="calculateDeduction">
+        <select v-model="redirect" id="redirect">
           <option value="no">否</option>
           <option value="yes">是</option>
         </select>
@@ -40,81 +40,124 @@
 
       <div class="form-group">
         <label class="form-label">扣除积分:</label>
-        <span>{{ quantity }} * {{ spiderMultiplier }} * {{ redirectMultiplier }} = {{ deductedPoints }}</span>
+        <span>{{ deductedPoints }}</span>
       </div>
 
-      <button type="submit">提交</button>
+      <button type="submit" :disabled="isSubmitting">提交</button>
 
       <!-- 提交状态反馈 -->
       <div v-if="submissionStatus" class="submission-status">{{ submissionStatus }}</div>
     </form>
+
+    <ul>
+      <li v-for="item in linkList" :key="item.id">{{ item.url }}</li>
+    </ul>
   </div>
 </template>
 
 <script>
-import { insertdata } from '@/api/system/spider/url';
+import { insertdata, listData, addStutas } from '@/api/system/spider/url';
 
 export default {
   data() {
     return {
       notes: '',
-      quantity: 0,
       spiderPool: 'baidu-x10',
       redirect: 'no',
       points: 600,
-      deductedPoints: 0,
-      spiderMultiplier: 10,
-      redirectMultiplier: 1,
-      submissionStatus: '' // 用于反馈提交状态
+      submissionStatus: '',
+      isSubmitting: false,
+      linkList: [] // 用于存储链接列表
     };
   },
+  computed: {
+    quantity() {
+      return (this.notes.match(/https?:\/\/[^\s]+/g) || []).length;
+    },
+    spiderMultiplier() {
+      return parseInt(this.spiderPool.split('-x')[1]) || 1;
+    },
+    redirectMultiplier() {
+      return this.redirect === 'yes' ? 10 : 1;
+    },
+    deductedPoints() {
+      return this.quantity * this.spiderMultiplier * this.redirectMultiplier;
+    }
+  },
   methods: {
-    updateQuantity() {
-      // 统计输入中的 URL 数量
-      this.quantity = (this.notes.match(/https?:\/\//g) || []).length;
-      this.calculateDeduction();
-    },
-    calculateDeduction() {
-      // 计算扣除积分
-      this.spiderMultiplier = parseInt(this.spiderPool.split('-x')[1]) || 1;
-      this.redirectMultiplier = this.redirect === 'yes' ? 10 : 1;
-      this.deductedPoints = this.quantity * this.spiderMultiplier * this.redirectMultiplier;
-    },
     async submitForm() {
-      // 提交表单数据
-      if (this.quantity === 0) {
-        this.submissionStatus = '描述中没有有效链接';
-        return;
-      }
+  // 验证数量
+  if (this.quantity === 0) {
+    this.submissionStatus = '描述中没有有效链接';
+    return;
+  }
 
-      const data = {
-        // id: 0, // 假设ID由服务器生成
-        urlnum: this.quantity,
-        url: this.notes,
-        pool: this.spiderPool,
-        forcedBootState: this.redirect === 'yes' ? 1 : 0, // "yes"为1，"no"为0
-        integral: this.deductedPoints
-      };
+  const data = {
+    urlnum: this.quantity,
+    url: this.notes,
+    pool: this.spiderPool,
+    forcedBootState: this.redirect === 'yes' ? 1 : 0,
+    integral: this.deductedPoints
+  };
 
-      try {
-        const response = await insertdata(data);
-        console.log('表单提交成功:', response.data);
-        this.submissionStatus = '提交成功'; // 更新状态反馈
-        // 重置表单
-        this.resetForm();
-      } catch (error) {
-        console.error('提交表单时出错:', error);
-        this.submissionStatus = '提交失败，请重试'; // 更新状态反馈
-      }
-    },
+  this.isSubmitting = true; // 开始提交状态
+  try {
+    // 1. 调用 insertdata 接口
+    const insertResponse = await insertdata(data);
+    console.log('表单提交成功:', insertResponse.data);
+    this.submissionStatus = '提交成功';
+
+    // 2. 调用 listData 接口获取链接列表
+    const listResponse = await listData({});
+    
+    // 确保 listResponse.data 为一个数组
+    this.linkList = Array.isArray(listResponse.rows) ? listResponse.rows : [];
+
+    console.log('查询数据', listResponse.rows);
+    
+    
+    // 确保列表中至少有一条链接
+    if (this.linkList.length === 0) {
+      this.submissionStatus = '没有可用链接';
+      return;
+    }
+
+    // 3. 取最新一条链接
+    const latestLink = this.linkList[this.linkList.length - 1]; // 获取最新链接
+      console.log('-=-=-=-=-', latestLink);
+      
+    // 构造 addStutas 的请求参数
+    const stutasData = {
+      submitId: latestLink.id, // 使用 insertResponse 返回的 ID
+      submitType: this.spiderPool, // 使用蜘蛛池作为类型
+      submitStutsa: 0, // 默认值
+      coment: '', // 这里可以添加备注信息，如果需要的话
+      urlnum: this.quantity,
+      forcedBootState: latestLink.forcedBootState,
+      ticktime: new Date().toISOString()
+    };
+    console.log('asd000000',stutasData);
+    
+    // 调用 addStutas 接口
+    await addStutas(stutasData);
+    console.log('状态添加成功');
+
+    // 重置表单
+    this.resetForm();
+  } catch (error) {
+    console.error('提交表单时出错:', error);
+    this.submissionStatus = '提交失败，请重试';
+  } finally {
+    this.isSubmitting = false; // 重置提交状态
+  }
+},
+
     resetForm() {
-      // 重置表单字段
       this.notes = '';
-      this.quantity = 0;
       this.spiderPool = 'baidu-x10';
       this.redirect = 'no';
       this.submissionStatus = '';
-      this.deductedPoints = 0;
+      this.linkList = []; // 清空链接列表
     }
   },
 };

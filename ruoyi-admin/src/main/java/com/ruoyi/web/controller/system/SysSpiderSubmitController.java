@@ -47,6 +47,7 @@ public class SysSpiderSubmitController extends BaseController
     {
         startPage();
         List<SysSpiderSubmit> list = sysSpiderSubmitService.selectSysSpiderSubmitList(sysSpiderSubmit);
+        System.out.println("============="+list);
         return getDataTable(list);
     }
 
