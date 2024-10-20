@@ -41,7 +41,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 查询【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:list')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysSpiderSubmit sysSpiderSubmit)
     {
@@ -54,7 +54,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 导出【请填写功能名称】列表
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:export')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:export')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysSpiderSubmit sysSpiderSubmit)
@@ -67,7 +67,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:query')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -77,7 +77,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 新增【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:add')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:add')")
     @Log(title = "添加链接", businessType = BusinessType.INSERT)
     @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody SysSpiderSubmit sysSpiderSubmit)
@@ -90,7 +90,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 修改【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:edit')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSpiderSubmit sysSpiderSubmit)
@@ -101,7 +101,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 删除【请填写功能名称】
      */
-    @PreAuthorize("@ss.hasPermi('system:submit:remove')")
+    @PreAuthorize("@ss.hasPermi('spider:submit:remove')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

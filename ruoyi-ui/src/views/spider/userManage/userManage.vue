@@ -67,61 +67,61 @@
           v-hasPermi="['enterprise:manage:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['enterprise:manage:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['enterprise:manage:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-upload2"
-          size="mini"
-          @click="handleImport"
-          v-hasPermi="['system:user:import']"
-        >导入</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:user:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['enterprise:manage:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['enterprise:manage:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="info"-->
+<!--          plain-->
+<!--          icon="el-icon-upload2"-->
+<!--          size="mini"-->
+<!--          @click="handleImport"-->
+<!--          v-hasPermi="['system:user:import']"-->
+<!--        >导入</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['system:user:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="enterpriseList" :columns="columns"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="enterprise" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50" align="center" />
-      <el-table-column label="企业ID" align="center" key="enterpriseId" prop="enterpriseId"  v-if="columns[0].visible"/>
+      <el-table-column label="企业ID" align="center" key="enterpriseId" prop="enterpriseId"  v-if="columns[0].invisible"/>
       <el-table-column label="企业名称" align="center" key="enterpriseName" prop="enterpriseName"  v-if="columns[1].visible"/>
       <el-table-column label="企业网址" align="center" key="enterpriseUrl" prop="enterpriseUrl"  v-if="columns[2].visible"/>
-      <el-table-column label="企业类型" align="center" key="enterpriseType" prop="enterpriseType"  v-if="columns[1].visible"/>
-      <el-table-column label="关键词" align="center" key="keyword" prop="keyword"  v-if="columns[3].visible"/>
+      <el-table-column label="企业类型" align="center" key="enterpriseType" prop="enterpriseType"  v-if="columns[1].invisible"/>
+      <el-table-column label="关键词" align="center" key="keyword" prop="keyword"  v-if="columns[3].invisible"/>
       <el-table-column label="创建者ID" align="center" key="userId" prop="userId" showName="false" v-if="columns[3].invisible"/>
-      <el-table-column label="创建者" align="center" key="userName" prop="userName"  v-if="columns[3].visible"/>
-      <el-table-column label="修改者" align="center" key="updateName" prop="updateName"  v-if="columns[3].visible"/>
+      <el-table-column label="创建者" align="center" key="userName" prop="userName"  v-if="columns[3].invisible"/>
+      <el-table-column label="修改者" align="center" key="updateName" prop="updateName"  v-if="columns[3].invisible"/>
       <el-table-column label="状态" align="center" key="status" v-if="columns[4].visible">
         <template slot-scope="scope">
           <el-switch
@@ -172,35 +172,35 @@
                   <el-input v-model="form.enterpriseUrl" placeholder="请输入企业网站" maxlength="30" />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="企业类型">
-                  <el-select v-model="form.enterpriseType" placeholder="企业类型">
-                    <el-option
-                      v-for="dict in enterpriseTypeOptions"
-                      :key="dict.value"
-                      :label="dict.label"
-                      :value="dict.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="企业状态">
-                  <el-select v-model="form.status" placeholder="企业状态">
-                    <el-option
-                      v-for="dict in enterpriseStatusOptions"
-                      :key="dict.value"
-                      :label="dict.label"
-                      :value="dict.value"
-                    ></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="企业关键词" prop="enterpriseUrl">
-                  <el-input v-model="form.keyword" placeholder="企业关键词" maxlength="30" />
-                </el-form-item>
-              </el-col>
+<!--              <el-col :span="12">-->
+<!--                <el-form-item label="企业类型">-->
+<!--                  <el-select v-model="form.enterpriseType" placeholder="企业类型">-->
+<!--                    <el-option-->
+<!--                      v-for="dict in enterpriseTypeOptions"-->
+<!--                      :key="dict.value"-->
+<!--                      :label="dict.label"-->
+<!--                      :value="dict.value"-->
+<!--                    ></el-option>-->
+<!--                  </el-select>-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
+<!--              <el-col :span="12">-->
+<!--                <el-form-item label="企业状态">-->
+<!--                  <el-select v-model="form.status" placeholder="企业状态">-->
+<!--                    <el-option-->
+<!--                      v-for="dict in enterpriseStatusOptions"-->
+<!--                      :key="dict.value"-->
+<!--                      :label="dict.label"-->
+<!--                      :value="dict.value"-->
+<!--                    ></el-option>-->
+<!--                  </el-select>-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
+<!--              <el-col :span="12">-->
+<!--                <el-form-item label="企业关键词" prop="enterpriseUrl">-->
+<!--                  <el-input v-model="form.keyword" placeholder="企业关键词" maxlength="30" />-->
+<!--                </el-form-item>-->
+<!--              </el-col>-->
             </el-row>
           </el-form>
           <div slot="footer" class="dialog-footer">

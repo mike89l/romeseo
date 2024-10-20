@@ -30,13 +30,13 @@ public class Enterprise extends BaseEntity implements Serializable {
     @Excel(name = "关键词")
     private String keyword;
 
-    /** 创建者ID */
+    /** 创建者ID=userID 证明该网站由该用户创建，不可以修改 */
     @Excel(name = "创建者编号", type = Excel.Type.IMPORT)
-    private Long createId;
+    private Long userId;
 
-    /** 创建者账号 */
+    /** 创建者账号 证明该网站由该用户创建，不可以修改*/
     @Excel(name = "创建者")
-    private String createName;
+    private String userName;
 
     /** 修改者账号 */
     @Excel(name = "创建者")
@@ -58,8 +58,8 @@ public class Enterprise extends BaseEntity implements Serializable {
                 .append("enterpriseUrl", enterpriseUrl)
                 .append("enterpriseType", enterpriseType)
                 .append("keyword", keyword)
-                .append("createId", createId)
-                .append("createName", createName)
+                .append("userId", userId)
+                .append("userName", userName)
                 .append("updateName", updateName)
                 .append("status", status)
                 .append("delFlag", delFlag)
@@ -106,20 +106,20 @@ public class Enterprise extends BaseEntity implements Serializable {
         this.keyword = keyword;
     }
 
-    public Long getCreateId() {
-        return createId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCreateId(Long createId) {
-        this.createId = createId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getCreateName() {
-        return createName;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setCreateName(String createName) {
-        this.createName = createName;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUpdateName() {

@@ -43,8 +43,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             enterprise.setStatus(PjtConfig.getZero());
         }
         enterprise.setDelFlag(PjtConfig.getZero());
-        enterprise.setCreateId(getUserId());
-        enterprise.setCreateName(getUsername());
+        enterprise.setUserId(getUserId());
+        //此处创建者是用户，代表该网站由用户创建，不可以修改
+        enterprise.setUserName(getUsername());
         enterprise.setUpdateName(getUsername());
         return enterpriseMapper.insertEnterprise(enterprise);
     }
