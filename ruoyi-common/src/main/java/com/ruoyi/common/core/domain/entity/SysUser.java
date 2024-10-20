@@ -70,6 +70,9 @@ public class SysUser extends BaseEntity
     @Excel(name = "最后登录时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss", type = Type.EXPORT)
     private Date loginDate;
 
+    /** 企业名称 */
+    private String enterpriseName;
+
     /** 部门对象 */
     @Excels({
         @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
@@ -88,6 +91,14 @@ public class SysUser extends BaseEntity
 
     /** 角色ID */
     private Long roleId;
+
+    public String getEnterpriseName() {
+        return enterpriseName;
+    }
+
+    public void setEnterpriseName(String enterpriseName) {
+        this.enterpriseName = enterpriseName;
+    }
 
     public SysUser()
     {
@@ -299,26 +310,26 @@ public class SysUser extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("userId", getUserId())
-            .append("deptId", getDeptId())
-            .append("userName", getUserName())
-            .append("nickName", getNickName())
-            .append("email", getEmail())
-            .append("phonenumber", getPhonenumber())
-            .append("sex", getSex())
-            .append("avatar", getAvatar())
-            .append("password", getPassword())
-            .append("status", getStatus())
-            .append("delFlag", getDelFlag())
-            .append("loginIp", getLoginIp())
-            .append("loginDate", getLoginDate())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .append("dept", getDept())
-            .toString();
+        return new ToStringBuilder(this)
+                .append("userId", userId)
+                .append("deptId", deptId)
+                .append("userName", userName)
+                .append("nickName", nickName)
+                .append("email", email)
+                .append("phonenumber", phonenumber)
+                .append("sex", sex)
+                .append("avatar", avatar)
+                .append("password", password)
+                .append("status", status)
+                .append("delFlag", delFlag)
+                .append("loginIp", loginIp)
+                .append("loginDate", loginDate)
+                .append("enterpriseName", enterpriseName)
+                .append("dept", dept)
+                .append("roles", roles)
+                .append("roleIds", roleIds)
+                .append("postIds", postIds)
+                .append("roleId", roleId)
+                .toString();
     }
 }
