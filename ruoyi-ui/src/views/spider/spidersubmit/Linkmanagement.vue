@@ -4,7 +4,7 @@
     <div class="filter-buttons">
       <button @click="fetchLinks">刷新数据</button>
     </div>
-    
+
     <!-- 表格 -->
     <table class="link-table">
       <thead>
@@ -78,12 +78,13 @@
 </template>
 
 <script>
-import { listStutas, getData, updateStutas, delStutas } from '@/api/system/spider/url'; // 确保正确引入API
+import { listStutas, getData, updateStutas, delStutas, info } from '@/api/system/spider/url'; // 确保正确引入API
 import { toast } from 'vue-toastification'; // 提示通知库
 
 export default {
   data() {
     return {
+      users: [],
       links: [],
       currentPage: 1,
       totalPages: 0,
@@ -97,8 +98,25 @@ export default {
   },
   mounted() {
     this.fetchLinks();
+    this.fetchUsers();
   },
   methods: {
+
+    async fetchUsers() {
+      try {
+        const response = await info(); // 调用获取用户信息的接口
+        console.log('API响应:', response); // 日志输出完整响应
+        if (response && response.code === 200) {
+      this.users = response.data;
+      console.log('用户信息:', this.users);
+    } else {
+      throw new Error('获取用户信息失败: ' + (response ? response.message : '无响应'));
+    }
+  } catch (error) {
+    console.error('获取用户信息时出错:', error);
+  }
+    },
+
     getSubmitTypeName(type) {
       const typeMap = {
         'baidu-x10': '百度',

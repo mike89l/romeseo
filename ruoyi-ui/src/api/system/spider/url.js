@@ -36,7 +36,7 @@ export function listStutas(query) {
       params: query
     })
   }
-  
+
   // 查询【请填写功能名称】详细
   export function getStutas(id) {
     return request({
@@ -44,7 +44,7 @@ export function listStutas(query) {
       method: 'get'
     })
   }
-  
+
   // 新增【请填写功能名称】
   export function addStutas(data) {
     return request({
@@ -53,7 +53,7 @@ export function listStutas(query) {
       data: data
     })
   }
-  
+
   // 修改【请填写功能名称】
   export function updateStutas(data) {
     return request({
@@ -62,7 +62,7 @@ export function listStutas(query) {
       data: data
     })
   }
-  
+
   // 删除【请填写功能名称】
   export function delStutas(id) {
     return request({
@@ -70,4 +70,22 @@ export function listStutas(query) {
       method: 'delete'
     })
   }
-  
+
+  // 删除【请填写功能名称】
+  export function info(id) {
+    return request({
+      url: '/system/stutas/info',
+      method: 'get'
+    })
+  }
+
+  export function login(username, password) {
+    return request({
+      url: '/login',
+      method: 'post',
+      data: {
+        username: username,
+        password: password
+      }
+    });
+  }

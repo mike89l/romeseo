@@ -22,6 +22,11 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public List<Enterprise> selectEnterpriseList(Enterprise enterprise) {
         List<Enterprise> s = enterpriseMapper.selectEnterprise(enterprise);
+        String s1 = "";
+        if (enterprise.getEnterpriseType() == null ){
+            if (enterprise.getEnterpriseType() == s1){ System.out.println("121212");}
+
+        }
         for(Enterprise e:s){
             if(e.getEnterpriseType().equals(PjtConfig.getFour())){
                 e.setEnterpriseType(PjtConfig.getFourValue());
