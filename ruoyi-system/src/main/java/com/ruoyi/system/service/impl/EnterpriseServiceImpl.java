@@ -1,17 +1,16 @@
 package com.ruoyi.system.service.impl;
 
-import com.ruoyi.common.core.domain.entity.Article;
 import com.ruoyi.common.core.domain.entity.Enterprise;
 import com.ruoyi.common.core.domain.entity.PjtConfig;
-import com.ruoyi.system.mapper.ArticleMapper;
 import com.ruoyi.system.mapper.EnterpriseMapper;
 import com.ruoyi.system.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUserId;
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
@@ -44,33 +43,32 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             enterprise.setStatus(PjtConfig.getZero());
         }
         enterprise.setDelFlag(PjtConfig.getZero());
-        int rows = enterpriseMapper.insertEnterprise(enterprise);
-        return rows;
+        enterprise.setCreateId(getUserId());
+        enterprise.setCreateName(getUsername());
+        enterprise.setUpdateName(getUsername());
+        return enterpriseMapper.insertEnterprise(enterprise);
     }
 
     @Override
     public Enterprise selectEnterpriseById(Long enterpriseId) {
-        Enterprise s = enterpriseMapper.selectEnterpriseById(enterpriseId);
-        return s;
+        return enterpriseMapper.selectEnterpriseById(enterpriseId);
     }
 
     @Override
     public int updateEnterprise(Enterprise enterprise) {
         enterprise.setUpdateTime(PjtConfig.getDate());
-        int s = enterpriseMapper.updateEnterprise(enterprise);
-        return s;
+        enterprise.setUpdateName(getUsername());
+        return enterpriseMapper.updateEnterprise(enterprise);
     }
 
     @Override
     public int updateEnterpriseStatus(Enterprise enterprise) {
-        String s = enterprise.getStatus();
         return enterpriseMapper.updateEnterprise(enterprise);
     }
 
     @Override
     public int deleteEnterpriseByIds(Long[] enterpriseId) {
-        int s = enterpriseMapper.deleteEnterpriseByIds(enterpriseId);
-        return s;
+        return enterpriseMapper.deleteEnterpriseByIds(enterpriseId);
     }
 
 

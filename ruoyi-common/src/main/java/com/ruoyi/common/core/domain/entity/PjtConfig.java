@@ -3,9 +3,12 @@ package com.ruoyi.common.core.domain.entity;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PjtConfig extends BaseEntity {
+public class PjtConfig extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** 状态参数 */
     @Excel(name = "状态参数-0")

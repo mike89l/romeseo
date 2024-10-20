@@ -4,8 +4,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.io.Serializable;
 
-public class Article extends BaseEntity {
+
+public class Article extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

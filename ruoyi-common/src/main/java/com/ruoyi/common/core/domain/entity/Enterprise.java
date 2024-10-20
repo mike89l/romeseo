@@ -4,7 +4,11 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class Enterprise extends BaseEntity {
+import java.io.Serializable;
+
+public class Enterprise extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     /** 企业ID */
     @Excel(name = "企业ID", type = Excel.Type.EXPORT, cellType = Excel.ColumnType.NUMERIC, prompt = "企业ID")
@@ -26,6 +30,18 @@ public class Enterprise extends BaseEntity {
     @Excel(name = "关键词")
     private String keyword;
 
+    /** 创建者ID */
+    @Excel(name = "创建者编号", type = Excel.Type.IMPORT)
+    private Long createId;
+
+    /** 创建者账号 */
+    @Excel(name = "创建者")
+    private String createName;
+
+    /** 修改者账号 */
+    @Excel(name = "创建者")
+    private String updateName;
+
     /** 企业状态 */
     @Excel(name = "企业状态", readConverterExp = "0=正常,1=停用")
     private String status;
@@ -34,6 +50,21 @@ public class Enterprise extends BaseEntity {
     @Excel(name = "删除状态", readConverterExp = "0=存在,1=删除")
     private String delFlag;
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("enterpriseId", enterpriseId)
+                .append("enterpriseName", enterpriseName)
+                .append("enterpriseUrl", enterpriseUrl)
+                .append("enterpriseType", enterpriseType)
+                .append("keyword", keyword)
+                .append("createId", createId)
+                .append("createName", createName)
+                .append("updateName", updateName)
+                .append("status", status)
+                .append("delFlag", delFlag)
+                .toString();
+    }
 
     public Long getEnterpriseId() {
         return enterpriseId;
@@ -75,25 +106,36 @@ public class Enterprise extends BaseEntity {
         this.keyword = keyword;
     }
 
+    public Long getCreateId() {
+        return createId;
+    }
+
+    public void setCreateId(Long createId) {
+        this.createId = createId;
+    }
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
+    }
+
+    public String getUpdateName() {
+        return updateName;
+    }
+
+    public void setUpdateName(String updateName) {
+        this.updateName = updateName;
+    }
+
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("enterpriseId", enterpriseId)
-                .append("enterpriseName", enterpriseName)
-                .append("enterpriseUrl", enterpriseUrl)
-                .append("enterpriseType", enterpriseType)
-                .append("keyword", keyword)
-                .append("status", status)
-                .append("delFlag", delFlag)
-                .toString();
     }
 
     public String getDelFlag() {
