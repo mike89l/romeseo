@@ -120,7 +120,7 @@
       <el-table-column label="企业类型" align="center" key="enterpriseType" prop="enterpriseType"  v-if="columns[1].invisible"/>
       <el-table-column label="关键词" align="center" key="keyword" prop="keyword"  v-if="columns[3].invisible"/>
       <el-table-column label="创建者ID" align="center" key="userId" prop="userId" showName="false" v-if="columns[3].invisible"/>
-      <el-table-column label="创建者" align="center" key="userName" prop="userName"  v-if="columns[3].invisible"/>
+      <el-table-column label="创建者" align="center" key="userName" prop="userName"  v-if="columns[3].visible"/>
       <el-table-column label="修改者" align="center" key="updateName" prop="updateName"  v-if="columns[3].invisible"/>
       <el-table-column label="状态" align="center" key="status" v-if="columns[4].visible">
         <template slot-scope="scope">

@@ -2,11 +2,13 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.domain.entity.Enterprise;
 import com.ruoyi.common.core.domain.entity.PjtConfig;
+import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.system.mapper.EnterpriseMapper;
 import com.ruoyi.system.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.ruoyi.common.utils.SecurityUtils.getUserId;
@@ -19,24 +21,31 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Autowired
     private EnterpriseMapper enterpriseMapper;
 
+
     @Override
     public List<Enterprise> selectEnterpriseList(Enterprise enterprise) {
-        List<Enterprise> s = enterpriseMapper.selectEnterprise(enterprise);
-        String s1 = "";
-        if (enterprise.getEnterpriseType() == null ){
-            if (enterprise.getEnterpriseType() == s1){ System.out.println("121212");}
+        SysRole sysRole = new SysRole();
 
-        }
-        for(Enterprise e:s){
-            if(e.getEnterpriseType().equals(PjtConfig.getFour())){
-                e.setEnterpriseType(PjtConfig.getFourValue());
-            }else if(e.getEnterpriseType().equals(PjtConfig.getFive())){
-                e.setEnterpriseType(PjtConfig.getFiveValue());
-            }else if(e.getEnterpriseType().equals(PjtConfig.getSix())){
-                e.setEnterpriseType(PjtConfig.getSixValue());
+        List<Enterprise> s1 = enterpriseMapper.selectEnterprise(enterprise);
+        Long rol = sysRole.getRoleId();
+        //超级管理,普管,开发可以查看所有企业网站
+        if(sysRole.getRoleId()==1||sysRole.getRoleId()==2||sysRole.getRoleId()==100){
+            for(Enterprise e:s1){
+                if(e.getEnterpriseType().equals(PjtConfig.getFour())){
+                    e.setEnterpriseType(PjtConfig.getFourValue());
+                }else if(e.getEnterpriseType().equals(PjtConfig.getFive())){
+                    e.setEnterpriseType(PjtConfig.getFiveValue());
+                }else if(e.getEnterpriseType().equals(PjtConfig.getSix())){
+                    e.setEnterpriseType(PjtConfig.getSixValue());
+                }
             }
+            return s1;
+        }else {
+            //普通用户
+            enterprise.setUserId(enterprise.getEnterpriseId());
+            List<Enterprise> s2 = enterpriseMapper.selectEnterprise(enterprise);
+            return s2;
         }
-        return s;
     }
 
     @Override
