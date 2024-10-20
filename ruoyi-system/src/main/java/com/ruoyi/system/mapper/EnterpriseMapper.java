@@ -15,4 +15,8 @@ public interface EnterpriseMapper {
     int updateEnterprise(Enterprise enterprise);
 
     int deleteEnterpriseByIds(Long[] enterpriseId);
+
+    String roleid(String userid);
+
+    List<Enterprise> userid(String roleint);
 }

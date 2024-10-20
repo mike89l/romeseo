@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ruoyi.common.utils.SecurityUtils.getUserId;
-import static com.ruoyi.common.utils.SecurityUtils.getUsername;
+import static com.ruoyi.common.utils.SecurityUtils.*;
+import static com.ruoyi.common.utils.ServletUtils.getParameter;
 
 @Service
 public class EnterpriseServiceImpl implements EnterpriseService {
@@ -27,9 +27,12 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         SysRole sysRole = new SysRole();
 
         List<Enterprise> s1 = enterpriseMapper.selectEnterprise(enterprise);
-        Long rol = sysRole.getRoleId();
+        String userid = String.valueOf(getUserId());
+        String roleid = enterpriseMapper.roleid(userid);
+        int roleint = Integer.parseInt(roleid);
+        System.out.println("rol" + userid  + "roleid" + roleid + "roleint" + roleint);
         //超级管理,普管,开发可以查看所有企业网站
-        if(sysRole.getRoleId()==1||sysRole.getRoleId()==2||sysRole.getRoleId()==100){
+        if(roleint ==1||roleint==2||roleint ==100){
             for(Enterprise e:s1){
                 if(e.getEnterpriseType().equals(PjtConfig.getFour())){
                     e.setEnterpriseType(PjtConfig.getFourValue());
@@ -43,7 +46,16 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }else {
             //普通用户
             enterprise.setUserId(enterprise.getEnterpriseId());
-            List<Enterprise> s2 = enterpriseMapper.selectEnterprise(enterprise);
+            List<Enterprise> s2 = enterpriseMapper.userid(String.valueOf(roleint));
+            for(Enterprise e:s2){
+                if(e.getEnterpriseType().equals(PjtConfig.getFour())){
+                    e.setEnterpriseType(PjtConfig.getFourValue());
+                }else if(e.getEnterpriseType().equals(PjtConfig.getFive())){
+                    e.setEnterpriseType(PjtConfig.getFiveValue());
+                }else if(e.getEnterpriseType().equals(PjtConfig.getSix())){
+                    e.setEnterpriseType(PjtConfig.getSixValue());
+                }
+            }
             return s2;
         }
     }
@@ -61,6 +73,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         //此处创建者是用户，代表该网站由用户创建，不可以修改
         enterprise.setUserName(getUsername());
         enterprise.setUpdateName(getUsername());
+        enterprise.setEnterpriseType(PjtConfig.getFour());
         return enterpriseMapper.insertEnterprise(enterprise);
     }
 
