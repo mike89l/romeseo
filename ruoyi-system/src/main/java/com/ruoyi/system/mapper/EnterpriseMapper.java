@@ -18,5 +18,7 @@ public interface EnterpriseMapper {
 
     String roleid(String userid);
 
-    List<Enterprise> userid(String roleint);
+    List<Enterprise> userid(String roleint); //sselectid
+
+    List<Enterprise> sselectid(Enterprise enterprise); //
 }

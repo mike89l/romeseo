@@ -117,10 +117,19 @@
     FROM
         `sys_user_role` t1
             INNER JOIN enterprise t2 ON t1.user_id = t2.user_id
-    WHERE t1.role_id = #{roleint};
+    WHERE t1.role_id = #{roleint}
+    and t2.del_flag != "1";
 
 </select>
 
+    <select id="sselectid" parameterType="enterprise" resultMap="EnterpriseResult">
+        SELECT
+            *
+        FROM
+            enterprise
+        WHERE enterprise_name = #{enterpriseName}
+        or  enterprise_url = #{enterpriseUrl}
 
+    </select>
 
 </mapper>

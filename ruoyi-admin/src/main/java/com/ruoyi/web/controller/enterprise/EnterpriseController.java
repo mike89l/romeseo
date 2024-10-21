@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Enterprise;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.system.mapper.EnterpriseMapper;
 import com.ruoyi.system.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +23,9 @@ public class EnterpriseController extends BaseController {
 
     @Autowired
     private EnterpriseService enterpriseService;
+
+    @Autowired
+    private EnterpriseMapper enterpriseMapper;
 
 
     @PreAuthorize("@ss.hasPermi('enterprise:manage:list')")
@@ -49,7 +53,9 @@ public class EnterpriseController extends BaseController {
     @PostMapping("/add")
     public AjaxResult list(@Validated @RequestBody Enterprise enterprise)
     {
-        List<Enterprise> rs = enterpriseService.selectEnterpriseList(enterprise);
+        String enterpriseName = enterprise.getEnterpriseName();
+        String enterpriseUrl  = enterprise.getEnterpriseUrl();
+        List<Enterprise> rs = enterpriseMapper.sselectid(enterprise);
         if (rs!=null && rs.size()>0) {
             return error("新增失败，该企业已存在");
         }

@@ -32,8 +32,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         int roleint = Integer.parseInt(roleid);
         System.out.println("rol" + userid  + "roleid" + roleid + "roleint" + roleint);
         //超级管理,普管,开发可以查看所有企业网站
+//        if (!enterprise.getDelFlag().equals("1")){
         if(roleint ==1||roleint==2||roleint ==100){
             for(Enterprise e:s1){
+//                if (!e.getDelFlag().equals("1")){
                 if(e.getEnterpriseType().equals(PjtConfig.getFour())){
                     e.setEnterpriseType(PjtConfig.getFourValue());
                 }else if(e.getEnterpriseType().equals(PjtConfig.getFive())){
@@ -41,6 +43,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 }else if(e.getEnterpriseType().equals(PjtConfig.getSix())){
                     e.setEnterpriseType(PjtConfig.getSixValue());
                 }
+//                }
             }
             return s1;
         }else {
@@ -48,6 +51,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
             enterprise.setUserId(enterprise.getEnterpriseId());
             List<Enterprise> s2 = enterpriseMapper.userid(String.valueOf(roleint));
             for(Enterprise e:s2){
+//                if (!e.getDelFlag().equals("1")){
                 if(e.getEnterpriseType().equals(PjtConfig.getFour())){
                     e.setEnterpriseType(PjtConfig.getFourValue());
                 }else if(e.getEnterpriseType().equals(PjtConfig.getFive())){
@@ -55,9 +59,13 @@ public class EnterpriseServiceImpl implements EnterpriseService {
                 }else if(e.getEnterpriseType().equals(PjtConfig.getSix())){
                     e.setEnterpriseType(PjtConfig.getSixValue());
                 }
-            }
+//                }
+//            }
+//            return null;
+        }
             return s2;
         }
+
     }
 
     @Override
@@ -74,6 +82,16 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         enterprise.setUserName(getUsername());
         enterprise.setUpdateName(getUsername());
         enterprise.setEnterpriseType(PjtConfig.getFour());
+        enterprise.setKeyword(PjtConfig.getZero());
+        List<Enterprise> s1 = enterpriseMapper.selectEnterprise(enterprise);
+
+        for(Enterprise e:s1){
+            if (e.getEnterpriseName().equals(enterprise.getEnterpriseName()) ||
+                    e.getEnterpriseUrl().equals(enterprise.getEnterpriseUrl())) {
+                // 返回提示信息，说明名称或URL重复
+                throw new RuntimeException("企业名称或URL已存在，请使用其他名称或URL。");
+            }
+        }
         return enterpriseMapper.insertEnterprise(enterprise);
     }
 
