@@ -21,6 +21,8 @@ public interface SysSpiderSubmitStutasMapper
      */
     public SysSpiderSubmitStutas selectSysSpiderSubmitStutasById(Long id);
 
+//    submitList
+public List<SysSpiderSubmitStutas> submitList(SysSpiderSubmitStutas sysSpiderSubmitStutas);
     /**
      * 查询【请填写功能名称】列表
      * 

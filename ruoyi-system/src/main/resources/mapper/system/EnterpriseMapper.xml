@@ -122,6 +122,15 @@
 
 </select>
 
+    <select id="username" parameterType="enterprise" resultMap="EnterpriseResult">
+        SELECT
+            *
+        FROM
+            enterprise
+        WHERE user_id = #{userid}
+
+    </select>
+
     <select id="sselectid" parameterType="enterprise" resultMap="EnterpriseResult">
         SELECT
             *

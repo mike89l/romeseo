@@ -64,12 +64,13 @@ export default {
   & .sidebar-logo-link {
     height: 100%;
     width: 100%;
+    margin-left: -12%;
 
     & .sidebar-logo {
-      width: 32px;
+      width: 60px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
+      margin-right: -12px;
     }
 
     & .sidebar-title {
@@ -78,7 +79,7 @@ export default {
       color: #fff;
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 22px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }

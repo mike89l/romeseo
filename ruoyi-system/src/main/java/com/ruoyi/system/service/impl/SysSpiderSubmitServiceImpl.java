@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.system.domain.SysSpiderSubmit;
 //import com.ruoyi.web.mapper.SysSpiderSubmitMapper;
 //import com.ruoyi.web.mapper.SysSpiderSubmitMapper;
@@ -35,6 +36,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public SysSpiderSubmit selectSysSpiderSubmitById(Long id)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.selectSysSpiderSubmitById(id);
     }
 
@@ -47,6 +49,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public List<SysSpiderSubmit> selectSysSpiderSubmitList(SysSpiderSubmit sysSpiderSubmit)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.selectSysSpiderSubmitList(sysSpiderSubmit);
     }
 
@@ -59,6 +62,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public int insertSysSpiderSubmit(SysSpiderSubmit sysSpiderSubmit)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.insertSysSpiderSubmit(sysSpiderSubmit);
     }
 
@@ -71,6 +75,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public int updateSysSpiderSubmit(SysSpiderSubmit sysSpiderSubmit)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.updateSysSpiderSubmit(sysSpiderSubmit);
     }
 
@@ -83,6 +88,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public int deleteSysSpiderSubmitByIds(Long[] ids)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.deleteSysSpiderSubmitByIds(ids);
     }
 
@@ -95,6 +101,7 @@ public class SysSpiderSubmitServiceImpl implements ISysSpiderSubmitService
     @Override
     public int deleteSysSpiderSubmitById(Long id)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitMapper.deleteSysSpiderSubmitById(id);
     }
 }

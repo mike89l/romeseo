@@ -13,11 +13,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="urlnum"    column="urlnum"    />
         <result property="forcedBootState"    column="forced_boot_state"    />
         <result property="ticktime"    column="ticktime"    />
+        <result property="users"    column="users"    />
+        <result property="userid"    column="user_id"    />
     </resultMap>
 
     <sql id="selectSysSpiderSubmitStutasVo">
-        select id, submit_id, submit_type, submit_stutsa, coment,urlnum, forced_boot_state,ticktime from sys_spider_submit_stutas
+        select id, submit_id, submit_type, submit_stutsa, coment,urlnum, forced_boot_state,ticktime,users,user_id from sys_spider_submit_stutas
     </sql>
+    <select id="submitList" parameterType="SysSpiderSubmitStutas" resultMap="SysSpiderSubmitStutasResult">
+        <include refid="selectSysSpiderSubmitStutasVo"/>
+    </select>
+
 
     <select id="selectSysSpiderSubmitStutasList" parameterType="SysSpiderSubmitStutas" resultMap="SysSpiderSubmitStutasResult">
         <include refid="selectSysSpiderSubmitStutasVo"/>
@@ -29,6 +35,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urlnum != null "> and urlnum = #{urlnum}</if>
             <if test="forcedBootState != null "> and forced_boot_state = #{forcedBootState}</if>
             <if test="ticktime != null "> and ticktime = #{ticktime}</if>
+            <if test="users != null ">  and users = #{users}</if>
+            <if test="userid != null ">  and user_id = #{userid}</if>
         </where>
     </select>
     
@@ -47,6 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urlnum != null">urlnum,</if>
             <if test="forcedBootState != null">forced_boot_state,</if>
             <if test="ticktime != null ">  ticktime,</if>
+            <if test="users != null ">  users,</if>
+            <if test="userid != null ">  user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="submitId != null">#{submitId},</if>
@@ -56,6 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="urlnum != null">#{urlnum},</if>
             <if test="forcedBootState != null">#{forcedBootState},</if>
             <if test="ticktime != null ">  #{ticktime},</if>
+            <if test="users != null ">  #{users},</if>
+            <if test="userid != null ">  #{userid},</if>
          </trim>
     </insert>
 

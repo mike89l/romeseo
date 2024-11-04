@@ -49,7 +49,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         }else {
             //普通用户
             enterprise.setUserId(enterprise.getEnterpriseId());
-            List<Enterprise> s2 = enterpriseMapper.userid(String.valueOf(roleint));
+            List<Enterprise> s2 = enterpriseMapper.username(String.valueOf(userid));
             for(Enterprise e:s2){
 //                if (!e.getDelFlag().equals("1")){
                 if(e.getEnterpriseType().equals(PjtConfig.getFour())){

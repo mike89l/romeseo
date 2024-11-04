@@ -1,11 +1,14 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.system.domain.SysSpiderSubmit;
 //import com.ruoyi.web.service.ISysSpiderSubmitService;
+import com.ruoyi.system.domain.SysSpiderSubmitStutas;
 import com.ruoyi.system.service.ISysSpiderSubmitService;
+import com.ruoyi.system.service.ISysSpiderSubmitStutasService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,9 @@ public class SysSpiderSubmitController extends BaseController
     @Autowired
     private ISysSpiderSubmitService sysSpiderSubmitService;
 
+    @Autowired
+    private ISysSpiderSubmitStutasService sysSpiderSubmitStutasService;
+
     /**
      * 查询【请填写功能名称】列表
      */
@@ -47,7 +53,6 @@ public class SysSpiderSubmitController extends BaseController
     {
         startPage();
         List<SysSpiderSubmit> list = sysSpiderSubmitService.selectSysSpiderSubmitList(sysSpiderSubmit);
-        System.out.println("============="+list);
         return getDataTable(list);
     }
 
@@ -82,9 +87,41 @@ public class SysSpiderSubmitController extends BaseController
     @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody SysSpiderSubmit sysSpiderSubmit)
     {
-        System.out.println("接收到的请求体: " + sysSpiderSubmit);
-        System.out.println("数据：" + sysSpiderSubmit);
-        return toAjax(sysSpiderSubmitService.insertSysSpiderSubmit(sysSpiderSubmit));
+//        return toAjax(sysSpiderSubmitService.insertSysSpiderSubmit(sysSpiderSubmit));
+        // 1. 插入链接
+        int result = sysSpiderSubmitService.insertSysSpiderSubmit(sysSpiderSubmit);
+        if (result > 0) {
+            // 2. 查询最新的链接列表
+            List<SysSpiderSubmit> linkList = sysSpiderSubmitService.selectSysSpiderSubmitList(new SysSpiderSubmit());
+
+            // 确保列表中至少有一条链接
+            if (linkList.isEmpty()) {
+                return AjaxResult.error("没有可用链接");
+            }
+
+            // 3. 获取最新一条链接
+            SysSpiderSubmit latestLink = linkList.get(linkList.size() - 1);
+
+            // 4. 构造状态数据
+            SysSpiderSubmitStutas stutasData = new SysSpiderSubmitStutas();
+            stutasData.setSubmitId(latestLink.getId()); // 使用最新链接的 ID
+            stutasData.setSubmitType(sysSpiderSubmit.getPool()); // 使用蜘蛛池作为类型
+            stutasData.setSubmitStutsa(0); // 默认值
+            stutasData.setUrlnum(sysSpiderSubmit.getUrlnum().toString());
+            stutasData.setForcedBootState(latestLink.getForcedBootState().toString());
+            stutasData.setTicktime(new Date().toString()); // 当前时间
+
+            // 5. 调用状态服务添加状态
+            int statusResult = sysSpiderSubmitStutasService.insertSysSpiderSubmitStutas(stutasData);
+
+            if (statusResult > 0) {
+                return AjaxResult.success("状态添加成功");
+            } else {
+                return AjaxResult.error("状态添加失败");
+            }
+        } else {
+            return AjaxResult.error("链接添加失败");
+        }
     }
 
     /**

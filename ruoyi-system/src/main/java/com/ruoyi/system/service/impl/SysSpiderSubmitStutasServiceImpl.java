@@ -1,14 +1,19 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.system.domain.SysSpiderSubmitStutas;
 //import com.ruoyi.web.mapper.SysSpiderSubmitStutasMapper;
+import com.ruoyi.system.mapper.EnterpriseMapper;
 import com.ruoyi.system.mapper.SysSpiderSubmitStutasMapper;
 //import com.ruoyi.web.service.ISysSpiderSubmitStutasService;
 import com.ruoyi.system.service.ISysSpiderSubmitStutasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUserId;
 //import com.ruoyi.system.mapper.SysSpiderSubmitStutasMapper;
 //import com.ruoyi.system.domain.SysSpiderSubmitStutas;
 //import com.ruoyi.system.service.ISysSpiderSubmitStutasService;
@@ -25,6 +30,9 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Autowired
     private SysSpiderSubmitStutasMapper sysSpiderSubmitStutasMapper;
 
+    @Autowired
+    private EnterpriseMapper enterpriseMapper;
+
     /**
      * 查询【请填写功能名称】
      * 
@@ -34,6 +42,7 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public SysSpiderSubmitStutas selectSysSpiderSubmitStutasById(Long id)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitStutasMapper.selectSysSpiderSubmitStutasById(id);
     }
 
@@ -46,7 +55,18 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public List<SysSpiderSubmitStutas> selectSysSpiderSubmitStutasList(SysSpiderSubmitStutas sysSpiderSubmitStutas)
     {
-        List<SysSpiderSubmitStutas> list = sysSpiderSubmitStutasMapper.selectSysSpiderSubmitStutasList(sysSpiderSubmitStutas);
+        PageHelper.clearPage();
+        String userid = String.valueOf(getUserId());
+        String roleid = enterpriseMapper.roleid(userid);
+        int roleint = Integer.parseInt(roleid);
+        List<SysSpiderSubmitStutas> list = new ArrayList<>();
+        if(roleint ==1||roleint==2||roleint ==100) {
+                list = sysSpiderSubmitStutasMapper.submitList(sysSpiderSubmitStutas);
+            } else {
+            sysSpiderSubmitStutas.setUserid(getUserId().intValue());
+                list = sysSpiderSubmitStutasMapper.selectSysSpiderSubmitStutasList(sysSpiderSubmitStutas);
+
+        }
         return list;
     }
 
@@ -59,6 +79,10 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public int insertSysSpiderSubmitStutas(SysSpiderSubmitStutas sysSpiderSubmitStutas)
     {
+        PageHelper.clearPage();
+        String user = String.valueOf(getUserId());
+        Integer in = getUserId().intValue();
+        sysSpiderSubmitStutas.setUserid(in);
         return sysSpiderSubmitStutasMapper.insertSysSpiderSubmitStutas(sysSpiderSubmitStutas);
     }
 
@@ -71,6 +95,7 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public int updateSysSpiderSubmitStutas(SysSpiderSubmitStutas sysSpiderSubmitStutas)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitStutasMapper.updateSysSpiderSubmitStutas(sysSpiderSubmitStutas);
     }
 
@@ -83,6 +108,7 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public int deleteSysSpiderSubmitStutasByIds(Long[] ids)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitStutasMapper.deleteSysSpiderSubmitStutasByIds(ids);
     }
 
@@ -95,6 +121,7 @@ public class SysSpiderSubmitStutasServiceImpl implements ISysSpiderSubmitStutasS
     @Override
     public int deleteSysSpiderSubmitStutasById(Long id)
     {
+        PageHelper.clearPage();
         return sysSpiderSubmitStutasMapper.deleteSysSpiderSubmitStutasById(id);
     }
 }

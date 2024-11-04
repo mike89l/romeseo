@@ -57,13 +57,16 @@
     </div>
 
     <!-- 用于展示URL的弹窗 -->
-    <div v-if="showModal" class="modal-overlay">
-      <div class="modal-content">
-        <h2>链接详情</h2>
-        <p>URL: {{ linkUrl }}</p>
-        <button @click="closeModal">关闭</button>
-      </div>
+<div v-if="showModal" class="modal-overlay">
+  <div class="modal-content">
+    <h2>链接详情</h2>
+    <div v-for="(url, index) in formattedUrls" :key="index">
+      <p>{{ url }}</p>
     </div>
+    <button @click="closeModal">关闭</button>
+  </div>
+</div>
+
 
     <!-- 用于添加备注的弹窗 -->
     <div v-if="showRemarkModal" class="modal-overlay">
@@ -93,6 +96,7 @@ export default {
       showRemarkModal: false, // 控制备注弹窗显示与否
       selectedLink: null,
       linkUrl: '',
+      formattedUrls: [], // 用于存储在弹窗中显示的格式化URL
       remark: '' // 储存输入的备注内容
     };
   },
@@ -139,24 +143,26 @@ export default {
     },
 
     async viewLink(link) {
-      this.selectedLink = link;
-      try {
-        console.log('选中链接:', link);
-        const response = await getData(link.submitId);
-        console.log('API 响应:', response);
-        if (response && response.code === 200 && response.data && response.data.url) {
-          this.linkUrl = response.data.url;
-          console.log('获取的URL:', this.linkUrl);
-          this.showModal = true;
-        } else {
-          throw new Error('URL数据缺失');
-        }
-      } catch (error) {
-        const errorMessage = (error && error.message) || '获取链接详情失败';
-        toast.error(errorMessage);
-        console.error('获取链接详情时出错:', error);
-      }
-    },
+  this.selectedLink = link;
+  try {
+    console.log('选中链接:', link);
+    const response = await getData(link.submitId);
+    console.log('API 响应:', response);
+    if (response && response.code === 200 && response.data && response.data.url) {
+      // 按换行符或空格分割多个URL（如果返回多个URL）
+      this.linkUrl = response.data.url; 
+      this.formattedUrls = this.linkUrl.split(/\s+/); // 根据实际返回的URL格式调整此部分
+      console.log('获取的URLs:', this.formattedUrls);
+      this.showModal = true;
+    } else {
+      throw new Error('URL数据缺失');
+    }
+  } catch (error) {
+    const errorMessage = (error && error.message) || '获取链接详情失败';
+    toast.error(errorMessage);
+    console.error('获取链接详情时出错:', error);
+  }
+},
 
     openRemarkModal(link) {
       this.selectedLink = link; // 存储当前链接

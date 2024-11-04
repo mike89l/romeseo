@@ -43,6 +43,13 @@ public class SysSpiderSubmitStutas extends BaseEntity
     @Excel(name = "时间")
     private String ticktime;
 
+    @Excel(name = "企业用户")
+    private String users;
+
+    @Excel(name = "用户id")
+    private Integer userid;
+
+
     @Override
     public String toString() {
         return "SysSpiderSubmitStutas{" +
@@ -54,6 +61,8 @@ public class SysSpiderSubmitStutas extends BaseEntity
                 ", urlnum='" + urlnum + '\'' +
                 ", forcedBootState='" + forcedBootState + '\'' +
                 ", ticktime='" + ticktime + '\'' +
+                ", users='" + users + '\'' +
+                ", userid=" + userid +
                 '}';
     }
 
@@ -119,5 +128,21 @@ public class SysSpiderSubmitStutas extends BaseEntity
 
     public void setTicktime(String ticktime) {
         this.ticktime = ticktime;
+    }
+
+    public String getUsers() {
+        return users;
+    }
+
+    public void setUsers(String users) {
+        this.users = users;
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
     }
 }
