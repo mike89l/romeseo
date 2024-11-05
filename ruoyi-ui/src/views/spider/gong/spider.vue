@@ -117,7 +117,8 @@ export default {
         // 2. 调用 listData 接口获取链接列表
         // const listResponse = await listData({});
         // this.linkList = listResponse.rows;  // 获取并展示链接列表
-
+        alert('表单提交成功')
+        window.history.back()
         // 重置表单
         this.resetForm();
       } catch (error) {

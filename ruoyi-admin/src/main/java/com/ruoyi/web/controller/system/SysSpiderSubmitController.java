@@ -73,7 +73,7 @@ public class SysSpiderSubmitController extends BaseController
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('spider:submit:query')")
+//    @PreAuthorize("@ss.hasPermi('spider:submit:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

@@ -75,7 +75,7 @@ public class SysSpiderSubmitStutasController extends BaseController {
     /**
      * 获取【请填写功能名称】详细信息
      */
-    @PreAuthorize("@ss.hasPermi('spider:stutas:query')")
+//    @PreAuthorize("@ss.hasPermi('spider:stutas:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(sysSpiderSubmitStutasService.selectSysSpiderSubmitStutasById(id));

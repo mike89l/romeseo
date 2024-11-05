@@ -16,7 +16,6 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:user:export']"
         >导出</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -56,7 +55,7 @@
       </el-table-column>
       <el-table-column label="是否强引" width="120">
         <template #default="{ row }">
-          {{ row.forcedBootState === "0" ? '是' : '否' }}
+          {{ row.forcedBootState === "1" ? '是' : '否' }}
         </template>
       </el-table-column>
       <el-table-column label="添加时间" prop="ticktime"  width="180" align="center"></el-table-column>
@@ -250,22 +249,86 @@ export default {
       this.fetchLinks();
     },
 
-    // 格式化时间
-  formatDate(row, column, cellValue) {
-    if (cellValue) {
-      // 将时间字符串转为 Date 对象
-      const date = new Date(cellValue);
-      // 格式化日期为 "yyyy-MM-dd HH:mm:ss" 格式
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
-      const seconds = String(date.getSeconds()).padStart(2, '0');
-      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    async handleExport() {
+  try {
+    const allLinks = []; // 用于存储所有链接的数据
+
+    // 1. 提取所有链接的 ID
+    const linkIds = this.links.map(link => link.submitId);
+    console.log('Extracted link IDs:', linkIds);
+
+    // 2. 根据 ID 获取链接的详细信息
+    for (const id of linkIds) {
+      const response = await getData(id); // 调用查看链接的接口
+      console.log('response', response);
+      
+      if (response && response.code === 200 && response.data && response.data.url) {
+        const urls = response.data.url.split(/\s+/); // 假设返回的链接可能是以空格或换行分隔的多个 URL
+
+        // 对每个 URL 创建一个链接对象，并重复 ID 和其他信息
+        urls.forEach(url => {
+          allLinks.push({
+            // id: urls.length > 1 ? '' : response.data.id, // 如果有多个 URL，ID 只显示在第一个
+            url: url,
+            status: '优化中',
+            pool: response.data.pool === 'baidu-x10' ? '百度' : '谷歌',
+            // time: this.formatDate(null, null, response.data.ticktime)
+          });
+        });
+      } else {
+        console.error(`Link data for ID ${id} is missing or invalid.`);
+      }
     }
-    return ''; // 如果没有日期，返回空
+
+    console.log('All link data for export:', allLinks);
+
+    // 3. 转换数据为 CSV 格式
+    const csvContent = this.convertToCSV(allLinks);
+    console.log('CSV content to be exported:', csvContent);
+
+    // 4. 导出 CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, '链接数据.csv');
+    toast.success('导出成功');
+  } catch (error) {
+    console.error('Error during export:', error);
+    toast.error('导出失败');
   }
+},
+
+
+
+convertToCSV(data) {
+  const header = ['链接列表', '状态','优化池'];
+  const rows = data.map(item => [
+    // item.id || '',  // 如果没有 ID，使用空字符串
+    item.url || '',  // 如果没有 URL，使用空字符串
+    item.status || '',  // 如果没有状态，使用空字符串
+    // item.time || '',  // 如果没有时间，使用空字符串
+    item.pool || ''
+  ]);
+
+  return [header, ...rows].map(row => row.join(',')).join('\n');
+},
+
+
+
+    // 格式化时间
+    formatDate(row, column, cellValue) {
+      if (cellValue) {
+        // 将时间字符串转为 Date 对象
+        const date = new Date(cellValue);
+        // 格式化日期为 "yyyy-MM-dd HH:mm:ss" 格式
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+      return ''; // 如果没有日期，返回空
+    }
   }
 };
 </script>
