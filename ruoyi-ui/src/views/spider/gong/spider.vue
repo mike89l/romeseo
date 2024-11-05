@@ -44,6 +44,7 @@
       </div>
 
       <button type="submit" :disabled="isSubmitting">提交</button>
+      <button @click="goToAddLinkPage" style="margin-left: 30px;">返回</button>
 
       <!-- 提交状态反馈 -->
       <div v-if="submissionStatus" class="submission-status">{{ submissionStatus }}</div>
@@ -85,6 +86,12 @@ export default {
     }
   },
   methods: {
+    // 导航到添加链接页面
+    goToAddLinkPage() {
+      // location.href("localhost:81/spider/spidersubmit")  // 路由跳转到添加链接页面
+      window.history.back()
+    },
+
     async submitForm() {
       // 验证数量
       if (this.quantity === 0) {

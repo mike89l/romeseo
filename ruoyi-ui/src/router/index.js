@@ -54,6 +54,11 @@ export const constantRoutes = [
     component: () => import('@/views/spider/gong/spider.vue')
   },
   {
+    path: '/submit',
+    name: 'submit',
+    component: () => import('@/views/spider/spidersubmit/Linkmanagement.vue')
+  },
+  {
     path: '/register',
     component: () => import('@/views/register'),
     hidden: true
