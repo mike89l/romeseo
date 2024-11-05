@@ -57,7 +57,7 @@ export function listStutas(query) {
   // 修改【请填写功能名称】
   export function updateStutas(data) {
     return request({
-      url: '/system/stutas',
+      url: '/system/stutas/edit',
       method: 'put',
       data: data
     })

@@ -102,44 +102,14 @@ export default {
 
       this.isSubmitting = true; // 开始提交状态
       try {
-      // 1. 调用 insertdata 接口
+        // 1. 调用 insertdata 接口
         const insertResponse = await insertdata(data);
         console.log('表单提交成功:', insertResponse.data);
         this.submissionStatus = '提交成功';
 
         // 2. 调用 listData 接口获取链接列表
-        const listResponse = await listData({});
-        // 确保 listResponse.data 为一个数组
-        this.linkList = Array.isArray(listResponse.rows) ? listResponse.rows : [];
-
-        console.log('查询数据', listResponse.rows);
-    
-    
-        // 确保列表中至少有一条链接
-        if (this.linkList.length === 0) {
-          this.submissionStatus = '没有可用链接';
-          return;
-        }
-
-        // 3. 取最新一条链接
-        const latestLink = this.linkList[this.linkList.length - 1]; // 获取最新链接
-          console.log('-=-=-=-=-', latestLink);
-      
-        // 构造 addStutas 的请求参数
-        const stutasData = {
-          submitId: latestLink.id, // 使用 insertResponse 返回的 ID
-          submitType: this.spiderPool, // 使用蜘蛛池作为类型
-          submitStutsa: 0, // 默认值
-          coment: '', // 这里可以添加备注信息，如果需要的话
-          urlnum: this.quantity,
-          forcedBootState: latestLink.forcedBootState,
-          ticktime: new Date().toISOString()
-        };
-        console.log('asd000000',stutasData);
-    
-        // 调用 addStutas 接口
-        await addStutas(stutasData);
-        console.log('状态添加成功');
+        // const listResponse = await listData({});
+        // this.linkList = listResponse.rows;  // 获取并展示链接列表
 
         // 重置表单
         this.resetForm();
@@ -149,7 +119,7 @@ export default {
       } finally {
         this.isSubmitting = false; // 重置提交状态
       }
-  },
+    },
 
     resetForm() {
       this.notes = '';
@@ -161,7 +131,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .form-container {

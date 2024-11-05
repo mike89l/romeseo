@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
@@ -101,6 +102,11 @@ public class SysSpiderSubmitController extends BaseController
 
             // 3. 获取最新一条链接
             SysSpiderSubmit latestLink = linkList.get(linkList.size() - 1);
+            // 创建 SimpleDateFormat 实例，指定目标格式
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            // 获取当前时间
+            String formattedDate = sdf.format(new Date());
 
             // 4. 构造状态数据
             SysSpiderSubmitStutas stutasData = new SysSpiderSubmitStutas();
@@ -109,7 +115,9 @@ public class SysSpiderSubmitController extends BaseController
             stutasData.setSubmitStutsa(0); // 默认值
             stutasData.setUrlnum(sysSpiderSubmit.getUrlnum().toString());
             stutasData.setForcedBootState(latestLink.getForcedBootState().toString());
-            stutasData.setTicktime(new Date().toString()); // 当前时间
+            stutasData.setTicktime(formattedDate); // 当前时间
+//            stutasData.setTicktime(new Date().toISOString().slice(0, 19).replace("T", " "));  // "2024-11-04 15:32:00"
+
 
             // 5. 调用状态服务添加状态
             int statusResult = sysSpiderSubmitStutasService.insertSysSpiderSubmitStutas(stutasData);

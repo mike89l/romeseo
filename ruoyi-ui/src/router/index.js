@@ -5,6 +5,8 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+// import spider from '@/views/spider/gong/spider.vue'
+// import { component } from 'vue/types/umd'
 
 /**
  * Note: 路由配置项
@@ -45,6 +47,11 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@/views/login'),
     hidden: true
+  },
+  {
+    path: '/spider',
+    name: 'spider',
+    component: () => import('@/views/spider/gong/spider.vue')
   },
   {
     path: '/register',

@@ -96,7 +96,7 @@ public class SysSpiderSubmitStutasController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('spider:stutas:edit')")
     @Log(title = "【请填写功能名称】", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping(value = "/edit")
     public AjaxResult edit(@RequestBody SysSpiderSubmitStutas sysSpiderSubmitStutas) {
         return toAjax(sysSpiderSubmitStutasService.updateSysSpiderSubmitStutas(sysSpiderSubmitStutas));
     }

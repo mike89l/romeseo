@@ -2,81 +2,79 @@
   <div class="page-container">
     <h1>链接管理</h1>
     <div class="filter-buttons">
-      <button @click="fetchLinks">刷新数据</button>
+      <el-button @click="fetchLinks" size="medium" type="primary">刷新数据</el-button>
+      <el-button @click="goToAddLinkPage" size="medium" type="success">添加链接</el-button>
     </div>
 
     <!-- 表格 -->
-    <table class="link-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>链接列表</th>
-          <th>链接数量</th>
-          <th>优化池</th>
-          <th>是否强引</th>
-          <th>添加时间</th>
-          <th>状态</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="link in links" :key="link.id">
-          <td>{{ link.id }}</td>
-          <td>
-            <el-button
-              size="mini"
-              type="text"
-              icon="el-icon-edit"
-              @click="viewLink(link)"
-              v-hasPermi="['article:manage:edit']"
-            >查看</el-button>
-          </td>
-          <td>{{ link.urlnum }}</td>
-          <td>{{ getSubmitTypeName(link.submitType) }}</td>
-          <td>{{ link.forcedBootState === 0 ? '是' : '否' }}</td>
-          <td>{{ link.addTime || new Date().toLocaleString() }}</td>
-          <td>
-            <span :class="{'orange-background': link.submitStutsa === 0, 'blue-background': link.submitStutsa === 1}">
-              {{ link.submitStutsa === 0 ? '优化中' : '优化结束' }}
-            </span>
-          </td>
-          <td>
-            <button @click="openRemarkModal(link)">添加备注</button>
-            <button @click="deleteLink(link)">删除</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <el-table :data="links" style="width: 100%" stripe>
+      <el-table-column label="ID" prop="id" width="80"></el-table-column>
+      <el-table-column label="链接列表">
+        <template #default="{ row }">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="viewLink(row)"
+            v-hasPermi="['spider:submit:list']"
+          >查看</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="链接数量" prop="urlnum" width="100"></el-table-column>
+      <el-table-column label="优化池" :formatter="getSubmitTypeName" width="100">
+        <template #default="{ row }">
+          {{ getSubmitTypeName(row.submitType) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="是否强引" width="120">
+        <template #default="{ row }">
+          {{ row.forcedBootState === "0" ? '是' : '否' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="添加时间" prop="ticktime"  width="180"></el-table-column>
+      <el-table-column label="状态" width="120">
+        <template #default="{ row }">
+          <span :class="{'orange-background': row.submitStutsa === 0, 'blue-background': row.submitStutsa === 1}">
+            {{ row.submitStutsa === 0 ? '优化中' : '优化结束' }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="180">
+        <template #default="{ row }">
+          <el-button @click="openRemarkModal(row)" size="mini" type="primary">添加备注</el-button>
+          <el-button @click="deleteLink(row)" size="mini" type="danger">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-    <!-- 分页控件移到这里 -->
-    <div class="pagination">
-      <button @click="previousPage" :disabled="currentPage === 1">上一页</button>
-      <span>{{ currentPage }} / {{ totalPages }}</span>
-      <input type="number" v-model="currentPage" min="1" :max="totalPages" @change="goToPage" aria-label="跳转到第几页">
-      <button @click="nextPage" :disabled="currentPage === totalPages">下一页</button>
-    </div>
+    <!-- 分页控件 -->
+    <el-pagination
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="totalPages * pageSize"
+      @current-change="goToPage"
+      layout="prev, pager, next"
+      background
+    ></el-pagination>
 
     <!-- 用于展示URL的弹窗 -->
-<div v-if="showModal" class="modal-overlay">
-  <div class="modal-content">
-    <h2>链接详情</h2>
-    <div v-for="(url, index) in formattedUrls" :key="index">
-      <p>{{ url }}</p>
-    </div>
-    <button @click="closeModal">关闭</button>
-  </div>
-</div>
-
+    <el-dialog :visible.sync="showModal" title="链接详情">
+      <div v-for="(url, index) in formattedUrls" :key="index">
+        <p>{{ url }}</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeModal">关闭</el-button>
+      </span>
+    </el-dialog>
 
     <!-- 用于添加备注的弹窗 -->
-    <div v-if="showRemarkModal" class="modal-overlay">
-      <div class="modal-content">
-        <h2>添加备注</h2>
-        <input v-model="remark" placeholder="请输入备注内容" />
-        <button @click="submitRemark">提交</button>
-        <button @click="closeRemarkModal">关闭</button>
-      </div>
-    </div>
+    <el-dialog :visible.sync="showRemarkModal" title="添加备注">
+      <el-input v-model="remark" placeholder="请输入备注内容" rows="4"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeRemarkModal">关闭</el-button>
+        <el-button type="primary" @click="submitRemark">提交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -93,11 +91,11 @@ export default {
       totalPages: 0,
       pageSize: 10,
       showModal: false,
-      showRemarkModal: false, // 控制备注弹窗显示与否
+      showRemarkModal: false,
       selectedLink: null,
       linkUrl: '',
-      formattedUrls: [], // 用于存储在弹窗中显示的格式化URL
-      remark: '' // 储存输入的备注内容
+      formattedUrls: [],
+      remark: ''
     };
   },
   mounted() {
@@ -105,71 +103,71 @@ export default {
     this.fetchUsers();
   },
   methods: {
-
-    async fetchUsers() {
-      try {
-        const response = await info(); // 调用获取用户信息的接口
-        console.log('API响应:', response); // 日志输出完整响应
-        if (response && response.code === 200) {
-      this.users = response.data;
-      console.log('用户信息:', this.users);
-    } else {
-      throw new Error('获取用户信息失败: ' + (response ? response.message : '无响应'));
-    }
-  } catch (error) {
-    console.error('获取用户信息时出错:', error);
-  }
+    // 导航到添加链接页面
+    goToAddLinkPage() {
+      this.$router.push('/spider');  // 路由跳转到添加链接页面
     },
 
+    // 提交类型映射
     getSubmitTypeName(type) {
       const typeMap = {
-        'baidu-x10': '百度',
-        'google-x35': 'Google',
-        // 可以继续添加其他映射
+        'baidu-x10': '百度',  // 映射 'baidu-x10' 为 '百度'
+        'google-x35': 'Google' // 映射 'google-x35' 为 'Google'
       };
-      return typeMap[type] || type; // 返回对应的中文名称，如果没有映射则返回原值
+      return typeMap[type] || type; // 如果没有映射，返回原始值
     },
 
+    // 获取用户信息
+    async fetchUsers() {
+      try {
+        const response = await info();
+        if (response && response.code === 200) {
+          this.users = response.data;
+        } else {
+          throw new Error('获取用户信息失败');
+        }
+      } catch (error) {
+        toast.error('获取用户信息失败');
+      }
+    },
+
+    // 获取链接信息
     async fetchLinks() {
       try {
         const response = await listStutas({ page: this.currentPage, size: this.pageSize });
         this.links = response.rows;
-        console.log('链接数据:', response.rows);
+        console.log('oioioio', this.links);
         this.totalPages = Math.ceil(response.total / this.pageSize);
       } catch (error) {
         toast.error('获取链接数据失败');
-        console.error(error);
       }
     },
 
+    // 查看链接详情
     async viewLink(link) {
-  this.selectedLink = link;
-  try {
-    console.log('选中链接:', link);
-    const response = await getData(link.submitId);
-    console.log('API 响应:', response);
-    if (response && response.code === 200 && response.data && response.data.url) {
-      // 按换行符或空格分割多个URL（如果返回多个URL）
-      this.linkUrl = response.data.url; 
-      this.formattedUrls = this.linkUrl.split(/\s+/); // 根据实际返回的URL格式调整此部分
-      console.log('获取的URLs:', this.formattedUrls);
-      this.showModal = true;
-    } else {
-      throw new Error('URL数据缺失');
-    }
-  } catch (error) {
-    const errorMessage = (error && error.message) || '获取链接详情失败';
-    toast.error(errorMessage);
-    console.error('获取链接详情时出错:', error);
-  }
-},
-
-    openRemarkModal(link) {
-      this.selectedLink = link; // 存储当前链接
-      this.remark = ''; // 清空之前的备注内容
-      this.showRemarkModal = true; // 显示备注弹窗
+      this.selectedLink = link;
+      try {
+        const response = await getData(link.submitId);
+        if (response && response.code === 200 && response.data && response.data.url) {
+          this.linkUrl = response.data.url;
+          this.formattedUrls = this.linkUrl.split(/\s+/);
+          this.showModal = true;
+        } else {
+          throw new Error('URL数据缺失');
+        }
+      } catch (error) {
+        toast.error('获取链接详情失败');
+      }
     },
 
+    // 打开备注弹窗
+    openRemarkModal(link) {
+      this.selectedLink = link;
+      this.remark = '';
+      this.showRemarkModal = true;
+    },
+
+    // 提交备注
     async submitRemark() {
       if (!this.remark) {
         toast.error('备注内容不能为空');
@@ -180,35 +178,31 @@ export default {
         const response = await updateStutas({ id: this.selectedLink.id, coment: this.remark });
         if (response && response.code === 200) {
           toast.success(`已添加备注: ${response.data.remark}`);
-          this.showRemarkModal = false; // 关闭备注弹窗
-          this.remark = ''; // 清空备注内容
-          console.log('备注弹窗已关闭'); // 添加调试输出
+          this.showRemarkModal = false;
+          this.remark = '';
         } else {
           throw new Error('添加备注失败');
         }
       } catch (error) {
-        const errorMessage = (error && error.message) || '添加备注失败';
-        toast.error(errorMessage);
-        console.error('添加备注时出错:', error);
+        toast.error('添加备注失败');
       }
     },
 
+    // 关闭URL弹窗
     closeModal() {
       this.showModal = false;
       this.selectedLink = null;
       this.linkUrl = '';
     },
 
+    // 关闭备注弹窗
     closeRemarkModal() {
       this.showRemarkModal = false;
       this.selectedLink = null;
-      this.remark = ''; // 清空备注内容
+      this.remark = '';
     },
 
-    addRemark(link) {
-      toast.success(`添加备注: ${link.id}`);
-    },
-
+    // 删除链接
     async deleteLink(link) {
       const confirmed = confirm(`确定要删除ID为 ${link.id} 的链接吗？`);
       if (confirmed) {
@@ -217,128 +211,45 @@ export default {
           this.links = this.links.filter(l => l.id !== link.id);
           toast.success(`已删除链接: ${link.id}`);
         } catch (error) {
-          toast.error(`删除链接失败: ${error.message}`);
+          toast.error('删除链接失败');
         }
       }
     },
 
-    previousPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--
-        this.fetchLinks();
-      }
-    },
-
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++
-        this.fetchLinks()
-      }
-    },
-
-    goToPage() {
-      this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPages));
+    // 分页
+    goToPage(page) {
+      this.currentPage = page;
       this.fetchLinks();
     },
-  },
-  watch: {
-    showModal(newVal) {
-      console.log('弹窗状态:', newVal);
-    },
+
+    // 格式化时间
+  formatDate(row, column, cellValue) {
+    if (cellValue) {
+      // 将时间字符串转为 Date 对象
+      const date = new Date(cellValue);
+      // 格式化日期为 "yyyy-MM-dd HH:mm:ss" 格式
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    return ''; // 如果没有日期，返回空
+  }
   }
 };
 </script>
 
 
 <style scoped>
-.page-container {
-  width: 100%;
-  margin: 0 auto;
-}
-
-.filter-buttons {
-  display: flex;
-  margin-bottom: 20px;
-}
-
-.filter-buttons button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  background-color: #f0f0f0;
-  border: none;
-  cursor: pointer;
-}
-
-.link-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.link-table th, .link-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
-  text-align: center;
-}
-
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.pagination button {
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.pagination button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* 弹窗样式 */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-/* 备注弹窗样式 */
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-/* 背景颜色样式 */
+/* 样式部分，根据需要调整 */
 .orange-background {
-  background-color: orange; /* 橙色背景 */
-  color: white; /* 文字颜色可以根据需要修改 */
-  padding: 2px 5px; /* 背景颜色包裹文字 */
-  border-radius: 4px; /* 圆角边框 */
+  background-color: orange;
 }
 
 .blue-background {
-  background-color: lightblue; /* 蓝色背景 */
-  color: black; /* 文字颜色可以根据需要修改 */
-  padding: 2px 5px; /* 背景颜色包裹文字 */
-  border-radius: 4px; /* 圆角边框 */
+  background-color: lightblue;
 }
 </style>
